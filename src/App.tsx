@@ -1,5 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
+import Fgcinput from './Input/Input';
+import Fgcoutput from './Output/Output';
 import './App.css';
 
 function App() {
@@ -7,6 +9,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <Fgcinput />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
@@ -18,6 +21,7 @@ function App() {
         >
           Learn React
         </a>
+        <Fgcoutput />
       </header>
     </div>
   );
