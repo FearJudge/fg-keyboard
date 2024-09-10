@@ -5,14 +5,20 @@ import Fgcoutput from './Output/Output';
 import './App.css';
 
 function App() {
+  let PageTitle:string = "Fighting Game Keyboard";
+  let PageSubtitle:string = "Clean up your Combo Inputs (Visually)"
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Fgcinput />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          {PageTitle} <br />
         </p>
+        <p className="font-sans text-lg text-bold text-blue-400 text-center border-2 border-indigo-400 px-64">
+          {PageSubtitle}
+        </p>
+        <Fgcinput />
         <a
           className="App-link"
           href="https://reactjs.org"

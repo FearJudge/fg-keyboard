@@ -1,7 +1,7 @@
 class FGCParse
 {
-    public ParseCombo(){
-        
+    public static ParseCombo(Input:string){
+        return Input.search("A");
     }
 }
 
