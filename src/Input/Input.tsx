@@ -1,17 +1,17 @@
 import { useState } from "react";
 import FGCParse from "./FGCParse";
 
-let InputFieldBaseText:string = "Combo:"
-let InputFieldPlaceholder:string = "Type Combo Here!"
+const InputFieldBaseText:string = "Combo:"
+const InputFieldPlaceholder:string = "Type Combo Here!"
 
 function Input() {
   const [comboText, setComboText] = useState('');
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    var newValue = e.target.value;
+    const newValue = e.target.value;
     setComboText(newValue);
-    var result:number = FGCParse.ParseCombo(newValue);
-    alert(newValue);
+    const result:number = FGCParse.ParseCombo(newValue);
+    console.log(result);
   }
     return (
       <div className="Input">
