@@ -2,11 +2,20 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import Fgcinput from './Input/Input';
+import Fgcinput from './Input/ComboInput';
 import Fgcoutput from './Output/Output';
+import InputParser from './Input/InputParser';
 
 function App() {
   const [count, setCount] = useState(0)
+  const [comboInput, setComboInput] = useState('')
+
+  function onModifyComboInput(e: React.ChangeEvent<HTMLInputElement>)
+  {
+    const newComboVal = e.target.value;
+    setComboInput(newComboVal);
+    InputParser.ParseCombo(newComboVal);
+  }
 
   return (
     <>
@@ -18,7 +27,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <Fgcinput />
+      <Fgcinput onModify={onModifyComboInput}/>
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -28,7 +37,7 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <Fgcoutput />
+      <Fgcoutput raw = {comboInput}/>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>

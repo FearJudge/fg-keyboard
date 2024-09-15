@@ -1,18 +1,12 @@
-import { useState } from "react";
-import FGCParse from "./FGCParse";
-
 const InputFieldBaseText:string = "Combo:"
 const InputFieldPlaceholder:string = "Type Combo Here!"
 
-function Input() {
-  const [comboText, setComboText] = useState('');
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setComboText(newValue);
-    const result:number = FGCParse.ParseCombo(newValue);
-    console.log(result);
-  }
+// Takes user input and passes it to be parsed.
+// Potentially reactively expand input field to accomodate larger
+// inputs.
+// TODO: Figure out why this gives a warning with type. It should be this type:
+// React.ChangeEvent<HTMLInputElement>
+function Input({onModify} : any) {
     return (
       <div className="Input">
         <label className="block text-gray-200 
@@ -23,11 +17,10 @@ function Input() {
         border rounded w-full py-2 px-3 text-gray-500
         leading-tight focus:outline-none focus:shadow-outline" 
         id="combo" type="text" placeholder={InputFieldPlaceholder}
-        onChange={onChange}>
+        onChange={onModify}>
         </input>
       </div>
     );
 }
 
-
-  export default Input;
+export default Input;
