@@ -9,12 +9,14 @@ import InputParser from './Input/InputParser';
 function App() {
   const [count, setCount] = useState(0)
   const [comboInput, setComboInput] = useState('')
+  const [outputArray, setOutputArray] = useState([""])
 
   function onModifyComboInput(e: React.ChangeEvent<HTMLInputElement>)
   {
     const newComboVal = e.target.value;
     setComboInput(newComboVal);
-    InputParser.ParseCombo(newComboVal);
+    const outputVal = InputParser.ParseComboWithGame(newComboVal);
+    setOutputArray(outputVal);
   }
 
   return (
@@ -37,7 +39,7 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <Fgcoutput raw = {comboInput}/>
+      <Fgcoutput raw = {comboInput} commands = {outputArray}/>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
