@@ -4,19 +4,19 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Fgcinput from './Input/ComboInput';
 import Fgcoutput from './Output/Output';
-import InputParser from './Input/InputParser';
+
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [comboInput, setComboInput] = useState('')
-  const [outputArray, setOutputArray] = useState([""])
+  const [count, setCount] = useState(0);
+  // NOTE: decide the type of buttonSequence later, here thought to be an
+  // Array of id numbers. If changed, update the type of newButtons accordingly.
+  const [buttonSequence, setButtonSequence] = useState<number[]>([]);
+  const [outputArray, setOutputArray] = useState([""]);
 
-  function onModifyComboInput(e: React.ChangeEvent<HTMLInputElement>)
-  {
-    const newComboVal = e.target.value;
-    setComboInput(newComboVal);
-    const outputVal = InputParser.ParseComboWithGame(newComboVal);
-    setOutputArray(outputVal);
+  function setButtons(newButtons: number[] | undefined) {
+    if (newButtons !== undefined) {
+      setButtonSequence([...newButtons]);
+    }
   }
 
   return (
@@ -29,7 +29,8 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <Fgcinput onModify={onModifyComboInput}/>
+      <Fgcinput setButtons={setButtons} setOutputArray={setOutputArray} />
+
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -39,7 +40,7 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <Fgcoutput raw = {comboInput} commands = {outputArray}/>
+      <Fgcoutput buttonsToMap={buttonSequence} commands = {outputArray}/>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
