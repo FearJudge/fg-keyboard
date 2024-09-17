@@ -9,7 +9,6 @@ function Output({commands, buttonsToMap} : {commands: string[], buttonsToMap: nu
 
   return (
     <div className="Output">
-      <h1> This is Output: </h1>
       <img src={testimage}></img>
       <div >
         <ComboCanvas buttonsToMap={buttonsToMap} commands={commands}/>

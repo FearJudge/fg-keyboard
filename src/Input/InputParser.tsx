@@ -23,7 +23,8 @@ class InputParser
   // Uses a game profile to match inputs
   public static ParseComboWithGame(Input:string){
     // Split the input by common delimiters
-    const commands = Input.split("[\\s.,->]+");
+    const commands = Input.split(/[\s.,->]+/);
+    console.log(commands);
     const commandArray: string[] = [];
     // Loop over the split input
     for (const command of commands)
