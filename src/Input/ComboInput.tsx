@@ -3,22 +3,23 @@ import InputParser from './InputParser';
 
 type InputProps = {
   setButtons: (newButtons: number[] | undefined) => void;
-  setOutputArray: (value: React.SetStateAction<string[]>) => void;
 };
 
 // Takes user input and passes it to be parsed.
 // Potentially reactively expand input field to accomodate larger
 // inputs.
-function Input({setButtons, setOutputArray}: InputProps) {
+function Input({setButtons}: InputProps) {
   const [comboInput, setComboInput] = useState('');
   const InputFieldBaseText: string = "Combo:";
   const InputFieldPlaceholder: string = "Type Combo Here!";
 
   function onModifyComboInput(e: React.ChangeEvent<HTMLInputElement>) {
     const newComboVal = e.target.value;
-    setButtons(InputParser.ParseCombo(newComboVal));
-    const outputVal = InputParser.ParseComboWithGame(newComboVal);
-    setOutputArray(outputVal);
+    //For testing purposes, can switch between either or.
+    // For quick testing with the game variant,
+    // use abbreviations like: d u f lk hp or qcf
+    //setButtons(InputParser.ParseCombo(newComboVal));
+    setButtons(InputParser.ParseComboWithGame(newComboVal));
     setComboInput(newComboVal);
   }
 
