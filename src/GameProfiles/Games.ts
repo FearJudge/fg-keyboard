@@ -1,13 +1,13 @@
-import { genericMotions, genericMovement, numPadMovement } from "./ButtonMapping";
+import { GenericMotions, GenericMovement, numPadMovement } from "./ButtonMapping";
 import { ConstructingRule, GenericArrowStyling, GenericMotionStyling } from "./ButtonStyling";
 import * as OutputImages from "../Output/SVGImport"
 
 // Type that defines the format in which games should be structured with.
 // You may add to this if needed.
-type GameFormat = {
+export type GameFormat = {
     displayName: string;
     replaceMotions?: boolean;
-    buttonRegexes: {[key: string]: [RegExp, number]};
+    buttonRegexes: {[key: string]: [RegExp, number, string?]};
     displayRules: { [key: number]: ConstructingRule[] };
 }
 
@@ -17,8 +17,8 @@ export const Games: {[key: string]: GameFormat} = {
         displayName: "Street Fighter 2",
         replaceMotions: false,
         buttonRegexes: {
-            ...genericMotions,
-            ...genericMovement,
+            ...GenericMotions,
+            ...GenericMovement,
             lp: [/([lL](ight)?[pP](unch)?)/, 10],
             mp: [/([mM](ed)?(ium)?[pP](unch)?)/, 11],
             hp: [/([hH](ard|eavy)?[pP](unch)?)/, 12],

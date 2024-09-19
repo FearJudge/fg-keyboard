@@ -29,22 +29,33 @@ export const ButtonIDToReadableName: [number, string][]= [
     [32, "Motion_HCF"],
     [33, "Motion_HCB"],
     [34, "Motion_DP"],
-    [35, "Motion_RDP"]
+    [35, "Motion_RDP"],
+    [300, "UserLabel_Raw"],
+    [301, "UserLabel_Label"],
+    [302, "UserLabel_Arrow"],
+    [303, "UserLabel_Footnote"]
 ]
 
 // Regular expressions for typical non numpad-notation movement.
 // Typically used with ground based 2d fighters, may work for 3d aswell.
 // May not work in all games, but helps clean-up code on the games
 // section and can be re-used.
-export const genericMovement: {[key: string]: [RegExp, number]} = {
-    upRight: [/[uU]p?-?[fF](wd|orward)?/, 9],
-    upLeft: [/[uU]p?-?[bB](a?ck(ward)?)?/, 7],
-    downRight: [/[dD](own)?[fF](wd|orward)?/, 3],
-    downLeft: [/[dD](own)?-?[bB](a?ck(ward)?)?/, 1],
-    up: [/([uU](p)?|[jJ]ump)/, 8],
-    down: [/[dD](own)?/, 2],
-    left: [/[bB](a?ck(ward)?)?/, 4],
-    right: [/[fF](wd|orward)?/, 6]
+export const GenericMovement: {[key: string]: [RegExp, number, string?]} = {
+    upRight: [/[uU]p?-?[fF](wd|orward)?/, 9, "UF"],
+    upLeft: [/[uU]p?-?[bB](a?ck(ward)?)?/, 7, "UB"],
+    downRight: [/[dD](own)?-?[fF](wd|orward)?/, 3, "DF"],
+    downLeft: [/[dD](own)?-?[bB](a?ck(ward)?)?/, 1, "DB"],
+    up: [/([uU](p)?|[jJ]ump)/, 8, "U"],
+    down: [/[dD](own)?/, 2, "D"],
+    left: [/[bB](a?ck(ward)?)?/, 4, "B"],
+    right: [/[fF]((wd)|(orward))?/, 6, "F"]
+}
+
+export const UserLabels: {[key: string]: [RegExp, number, string?]} = {
+    userInput: [/\[(?!min:).*?\]/, 300],
+    userInputLabeled: [/\((?!to:).*?\)/, 301],
+    userInputTransition: [/\((?=to:).*?\)/, 302],
+    userInputSmall: [/\[(?=min:).*?\]/, 303]
 }
 
 // A set of replacements for motions.
@@ -52,7 +63,7 @@ export const genericMovement: {[key: string]: [RegExp, number]} = {
 // instead of the motions id picture.
 // EX: ID 34 or (Dragon Punch) turns into the IDs 6, 2, 3
 // Forward -> Down -> Down+Forward
-export const MotionReplacements = {
+export const MotionReplacements: {[key: number]: number[]} = {
     30: [2, 3, 6],
     31: [2, 1, 4],
     32: [4, 1, 2, 3, 6],
@@ -63,26 +74,26 @@ export const MotionReplacements = {
 
 // Regular expressions for typical non numpad-notation motion inputs.
 // Typically used with ground based 2d fighters.
-export const genericMotions: {[key: string]: [RegExp, number]} = {
-    quarterCircleForward: [/[qQ][cC][fF]/, 30],
-    quarterCircleBackward: [/[qQ][cC][bB]/, 31],
-    halfCircleForward: [/[hH][cC][fF]/, 32],
-    halfCircleBackward: [/[hH][cC][bB]/, 33],
-    dragonPunchBackward: [/[Rr](ev(erse)?)?[dD](ragon)?[pP](unch)?/, 35],
-    dragonPunchForward: [/[dD](ragon)?[pP](unch)?/, 34],
+export const GenericMotions: {[key: string]: [RegExp, number, string?]} = {
+    quarterCircleForward: [/[qQ][cC][fF]/, 30, "QCF"],
+    quarterCircleBackward: [/[qQ][cC][bB]/, 31, "QCB"],
+    halfCircleForward: [/[hH][cC][fF]/, 32, "HCF"],
+    halfCircleBackward: [/[hH][cC][bB]/, 33, "HCB"],
+    dragonPunchBackward: [/[Rr](ev(erse)?)?[dD](ragon)?[pP](unch)?/, 35, "DP"],
+    dragonPunchForward: [/[dD](ragon)?[pP](unch)?/, 34, "Rev-DP"],
 }
 
 // Regular expressions for typical numpad-notation movement.
 // Typically used with "Anime" or "Airdash" fighters.
 // May not work in all games, but helps clean-up code on the games
 // section and can be re-used.
-export const numPadMovement: {[key: string]: [RegExp, number]} = {
-    up: [/NOT IMPLEMENTED/, 0],
-    down: [/NOT IMPLEMENTED/, 0],
-    left: [/NOT IMPLEMENTED/, 0],
-    right: [/NOT IMPLEMENTED/, 0],
-    upRight: [/NOT IMPLEMENTED/, 0],
-    upLeft: [/NOT IMPLEMENTED/, 0],
-    downRight: [/NOT IMPLEMENTED/, 0],
-    downLeft: [/NOT IMPLEMENTED/, 0],
+export const numPadMovement: {[key: string]: [RegExp, number, string?]} = {
+    up: [/8/, 8, "8"],
+    down: [/2/, 2, "2"],
+    left: [/4/, 4, "4"],
+    right: [/6/, 6, "6"],
+    upRight: [/9/, 9, "9"],
+    upLeft: [/7/, 7, "7"],
+    downRight: [/3/, 3, "3"],
+    downLeft: [/1/, 1, "1"],
 }
