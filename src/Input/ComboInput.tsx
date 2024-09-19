@@ -31,7 +31,7 @@ function Input({setButtons}: InputProps) {
   const InputFieldBaseText: string = "Combo:";
   const InputFieldPlaceholder: string = "Type Combo Here!";
 
-  function onModifyComboInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function onModifyComboInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const newComboVal = e.target.value;
     //For testing purposes, can switch between either or.
     // For quick testing with the game variant,
@@ -50,28 +50,26 @@ function Input({setButtons}: InputProps) {
   }
 
   return (
-    <div className="Input">
+    <div className="self-center py-3 h-36" >
       <label className="block text-gray-200
-        text-sm font-bold mb-2" htmlFor="combo">
+        text-lg font-bold font-sans mb-2" htmlFor="combo">
         {InputFieldBaseText}
       </label>
-      <input className="shadow appearance-none 
-        bg-transparent
-        text-center font-medium
-        size-max
-        border rounded-xl w-full py-2 px-3 
+      <textarea className="shadow appearance-none 
+        bg-transparent text-wrap text-xl
+        text-center font-medium row-span-full
+        font-sans h-auto w-4/5
+        border rounded-xl py-2 px-3 
         focus:text-blue-200 text-gray-100
-        focus:object-fill object-center
-        inset-y-2/3
         placeholder:text-blue-800
         leading-tight 
         focus:outline-none focus:shadow-2xl
         focus:shadow-white
         "
-        id="combo" type="text" placeholder={InputFieldPlaceholder}
+        id="combo" placeholder={InputFieldPlaceholder}
         value={comboInput}
         onChange={onModifyComboInput}>
-      </input>
+      </textarea>
     </div>
   );
 }

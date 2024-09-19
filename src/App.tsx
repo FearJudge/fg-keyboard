@@ -10,7 +10,6 @@ function App() {
   // NOTE: decide the type of buttonSequence later, here thought to be an
   // Array of id numbers. If changed, update the type of newButtons accordingly.
   const [buttonSequence, setButtonSequence] = useState<number[]>([]);
-  const [outputArray, setOutputArray] = useState([""]);
 
   function setButtons(newButtons: number[] | undefined) {
     if (newButtons !== undefined) {
@@ -23,8 +22,8 @@ function App() {
       <h1>Combo Writer</h1>
       <GameSelector />
       <CharSelector />
-      <Fgcinput setButtons={setButtons} setOutputArray={setOutputArray} />
-      <Fgcoutput buttonsToMap={buttonSequence} commands = {outputArray}/>
+      <Fgcinput setButtons={setButtons} />
+      <Fgcoutput buttonsToMap={buttonSequence} commands={[]}/>
     </>
   )
 }

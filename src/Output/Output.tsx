@@ -5,14 +5,13 @@ import testimage from '../assets/Input_SVGs/1B_A.svg';
 // Potentially also displays other input like additional data fields.
 // (Character, Combo Damage, Additional Notes etc.)
 function Output({commands, buttonsToMap} : {commands: string[], buttonsToMap: number[]}) {
-  console.log(commands);
+  console.log(buttonsToMap);
 
   return (
-    <div className="Output">
-      <img src={testimage}></img>
-      <div >
+    <div className="self-center py-3 h-24">
+      <>
         <ComboCanvas buttonsToMap={buttonsToMap} commands={commands}/>
-      </div>
+      </>
       <p> {buttonsToMap.join(', ')} </p>
       {
         commands.map((m, i) => {

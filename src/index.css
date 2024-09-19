@@ -57,6 +57,16 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+@layer base
+{
+  @font-face {
+  font-family: 'Dosis';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Dosis'), url(./assets/Fonts/Dosis/Dosis-VariableFont_wght.ttf) format('truetype');
+  }
+}
 
 @media (prefers-color-scheme: light) {
   :root {

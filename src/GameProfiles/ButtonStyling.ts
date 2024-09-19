@@ -8,18 +8,24 @@ export type ConstructingRule = {
     offset?: [number, number];
 }
 
+export const Fallback: ConstructingRule = {
+        src: Images.SingleButtonA,
+        color: "#ffffff",
+        offset: [0, 0],
+}
+
 // General presentation of arrow ids.
 export const GenericArrowStyling: { [key: number]: ConstructingRule[] } = {
     1: [{
-        src: Images.ButtonUpLeft,
+        src: Images.ButtonDownLeft,
         color: "#ffffff",
         offset: [0, 0],
     }],
     2: [{
-        src: Images.ButtonUp
+        src: Images.ButtonDown
     }],
     3: [{
-        src: Images.ButtonUpRight
+        src: Images.ButtonDownRight
     }],
     4: [{
         src: Images.ButtonLeft
@@ -31,13 +37,13 @@ export const GenericArrowStyling: { [key: number]: ConstructingRule[] } = {
         src: Images.ButtonRight
     }],
     7: [{
-        src: Images.ButtonDownLeft
+        src: Images.ButtonUpLeft
     }],
     8: [{
-        src: Images.ButtonDown
+        src: Images.ButtonUp
     }],
     9: [{
-        src: Images.ButtonDownRight
+        src: Images.ButtonUpRight
     }]
 };
 
