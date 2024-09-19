@@ -13,7 +13,7 @@ function Output({commands, buttonsToMap} : {commands: string[], buttonsToMap: nu
       <div >
         <ComboCanvas buttonsToMap={buttonsToMap} commands={commands}/>
       </div>
-      <p> {buttonsToMap} </p>
+      <p> {buttonsToMap.join(', ')} </p>
       {
         commands.map((m, i) => {
       return <a key={m} href={`#${m}`}>{(i ? ', ' : '') + m}</a>;
