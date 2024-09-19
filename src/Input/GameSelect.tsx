@@ -12,8 +12,8 @@ function GameSelector() {
             text-sm font-bold mb-2" htmlFor="game">
             {GameSelectorBaseText}
           </label>
-          <button id="game" className="shadow appearance-none bg-blue-400
-            border rounded w-full py-2 px-3 text-gray-500
+          <button id="game" className="shadow appearance-none bg-zinc-800
+            border-b-4 border-r-2 border-zinc-900 rounded w-2/5 py-2 px-3 text-blue-800
             leading-tight focus:outline-none focus:shadow-outline">
               <div>{SelectedGame/*predetermined now as an example*/}</div>
           </button>
