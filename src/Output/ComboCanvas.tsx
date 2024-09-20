@@ -29,13 +29,22 @@ export default function ComboCanvas({ buttonsToMap } : {commands: string[], butt
       
       if (ctx == null) {return; }
       const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap[i]);
-      for (let i = 0; i < rules.length; i++) {
+      const currentPosX = posX;
+      const currentPosY = posY;
+      for (let j = 0; j < rules.length; j++) {
         const imgWidth: number = 32;
         const imgHeight: number = 32;
         const image = new Image(imgWidth, imgHeight);
-        const imageSrc = rules[i].src;
-        image.onload = () => drawImage(image, imgWidth, imgHeight, i);
+        const imageSrc = rules[j].src;
+        image.onload = () => drawImage(image, imgWidth, imgHeight, currentPosX, currentPosY);
         image.src = imageSrc;
+        console.log(j);
+        if (j > 0) { break; }
+        posX = posX + imgWidth + MARGIN_BETWEEN_X;
+        if (posX > (canvasWidth - imgWidth - MARGIN_X)) {
+          posX = MARGIN_X;
+          posY = posY + imgHeight + MARGIN_BETWEEN_Y;
+        }
       }
     }
   }
@@ -50,15 +59,9 @@ export default function ComboCanvas({ buttonsToMap } : {commands: string[], butt
   }
 
   // Draws an image and updates the position where to draw next.
-  function drawImage(imageSrc: CanvasImageSource, imgWidth: number, imgHeight: number, i: number) {
+  function drawImage(imageSrc: CanvasImageSource, imgWidth: number, imgHeight: number, curX: number, curY: number) {
     if (ctx !== null) {
-      ctx.drawImage(imageSrc, posX, posY);
-      posX = posX + imgWidth + MARGIN_BETWEEN_X;
-      if (posX > (canvasWidth - imgWidth - MARGIN_X)) {
-        posX = MARGIN_X;
-        posY = posY + imgHeight + MARGIN_BETWEEN_Y;
-      }
-      console.log(posX + " " + posY + " ");
+      ctx.drawImage(imageSrc, curX, curY);
     }
   }
 
