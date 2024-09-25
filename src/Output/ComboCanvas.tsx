@@ -14,59 +14,43 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: number[]}) 
 
 
   const c : HTMLCanvasElement | null = document.getElementById("comboArea") as HTMLCanvasElement;
+  if (c !== null) {
+    c.height = canvasHeight;
+  }
   const ctx = c?.getContext("2d");
   ctx?.reset();
 
-  if (buttonsToMap.length > 0 && ctx !== null) {
-    drawToCanvas();
-  }
+  drawToCanvas();
 
-  // TODO: Seperate into smaller functions for readability.
   async function drawToCanvas() {
     for (let i = 0; i < buttonsToMap.length; i++) {
-
       if (ctx == null) {return; }
       const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap[i]);
 
       const imgWidth: number = 32;
       const imgHeight: number = 32;
-      if (posX + imgWidth + MARGIN_X > canvasWidth) {
-        posX = MARGIN_X;
-        // NOTE: If different image heights will be implemented, use here the height of the
-        // latest row instead of imgHeight to update posY and canvasHeight.
-        posY = posY + imgHeight + MARGIN_BETWEEN_Y;
-        canvasHeight = canvasHeight + imgHeight + MARGIN_BETWEEN_Y;
-        await resizeCanvas(canvasHeight);
-      }
+      await makeNewRowIfNeeded(imgWidth, imgHeight);
 
       const currentPosX = posX;
       const currentPosY = posY;
 
       for (let j = 0; j < rules.length; j++) {
-        // const imgWidth: number = 32;
-        // const imgHeight: number = 32;
-
         const image = new Image(imgWidth, imgHeight);
-        const imageSrc = rules[j].src;
-
-        await new Promise<number>((resolve) => {image.onload = () => {
-          if (ctx !== null){
-            if (rules[j].color != undefined) {
-              const recanv: CanvasImageSource = TintSVGByValue(image, rules[j].color as string) as OffscreenCanvas;
-              ctx.drawImage(recanv, currentPosX, currentPosY);
-            } else {
-              ctx.drawImage(image, currentPosX, currentPosY);
-            }
-            resolve(j);
-            }
-          }
-          image.src = imageSrc;
-        });
-
-        if (j > 0) { continue; }
-        posX = posX + imgWidth + MARGIN_BETWEEN_X;
+        await drawImageOnThePosition(image, rules[j], j, currentPosX, currentPosY);
       }
 
+      posX = posX + imgWidth + MARGIN_BETWEEN_X;
+    }
+  }
+
+  async function makeNewRowIfNeeded(imgWidth: number, imgHeight: number) {
+    if (posX + imgWidth + MARGIN_X > canvasWidth) {
+      posX = MARGIN_X;
+      // NOTE: If different image heights will be implemented, use here the height of the
+      // latest row instead of imgHeight to update posY and canvasHeight.
+      posY = posY + imgHeight + MARGIN_BETWEEN_Y;
+      canvasHeight = canvasHeight + imgHeight + MARGIN_BETWEEN_Y;
+      await resizeCanvas(canvasHeight);
     }
   }
 
@@ -87,20 +71,21 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: number[]}) 
     console.log("result for new canvas height: " + result);
   }
 
-  // mock function to get a different image for id 8. To be replaced
-  // by a function from OutputMapper.
-  function getImageSrc(id: number) {
-    let imageSrc: string = '';
-    if (id === 8) imageSrc = testImage2;
-    else imageSrc = testimage;
-    return imageSrc;
-  }
-
-  // Draws an image and updates the position where to draw next.
-  function drawImage(imageSrc: CanvasImageSource, imgWidth: number, imgHeight: number, curX: number, curY: number) {
-    if (ctx !== null) {
-      ctx.drawImage(imageSrc, curX, curY);
-    }
+  async function drawImageOnThePosition(image:HTMLImageElement, rule: ConstructingRule, index: number, curX: number, curY: number) {
+    await new Promise<number>((resolve) => {
+      image.onload = () => {
+        if (ctx !== null){
+          if (rule.color != undefined) {
+            const recanv: CanvasImageSource = TintSVGByValue(image, rule.color as string) as OffscreenCanvas;
+            ctx.drawImage(recanv, curX, curY);
+          } else {
+            ctx.drawImage(image, curX, curY);
+          }
+          resolve(index);
+          }
+        }
+        image.src = rule.src;
+    });
   }
 
   return <div className="grid">
