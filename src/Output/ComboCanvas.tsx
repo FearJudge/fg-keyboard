@@ -8,7 +8,7 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: number[]}) 
   const MARGIN_BETWEEN_Y = 0;
 
   let canvasWidth = 400;
-  let canvasHeight = 150;
+  let canvasHeight = 42;
   let posX = MARGIN_X;
   let posY = MARGIN_Y;
 
@@ -24,19 +24,31 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: number[]}) 
   // TODO: Seperate into smaller functions for readability.
   async function drawToCanvas() {
     for (let i = 0; i < buttonsToMap.length; i++) {
-      // Tried drawing another test image, too.
-      // TODO: Check the SVGs as the images don't seem to align vertically.
-      
+
       if (ctx == null) {return; }
       const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap[i]);
+
+      const imgWidth: number = 32;
+      const imgHeight: number = 32;
+      if (posX + imgWidth + MARGIN_X > canvasWidth) {
+        posX = MARGIN_X;
+        // NOTE: If different image heights will be implemented, use here the height of the
+        // latest row instead of imgHeight to update posY and canvasHeight.
+        posY = posY + imgHeight + MARGIN_BETWEEN_Y;
+        canvasHeight = canvasHeight + imgHeight + MARGIN_BETWEEN_Y;
+        await resizeCanvas(canvasHeight);
+      }
+
       const currentPosX = posX;
       const currentPosY = posY;
+
       for (let j = 0; j < rules.length; j++) {
-        const imgWidth: number = 32;
-        const imgHeight: number = 32;
+        // const imgWidth: number = 32;
+        // const imgHeight: number = 32;
+
         const image = new Image(imgWidth, imgHeight);
         const imageSrc = rules[j].src;
-        
+
         await new Promise<number>((resolve) => {image.onload = () => {
           if (ctx !== null){
             if (rules[j].color != undefined) {
@@ -50,15 +62,29 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: number[]}) 
           }
           image.src = imageSrc;
         });
-        
+
         if (j > 0) { continue; }
         posX = posX + imgWidth + MARGIN_BETWEEN_X;
-        if (posX > (canvasWidth - imgWidth - MARGIN_X)) {
-          posX = MARGIN_X;
-          posY = posY + imgHeight + MARGIN_BETWEEN_Y;
-        }
       }
+
     }
+  }
+
+  async function resizeCanvas(height: number) {
+    if (c == null || ctx == null) {return; }
+    const oldCanvas = c.toDataURL();
+    const img = new Image();
+
+    const result = await new Promise<number>((resolve) => {
+      img.onload = () => {
+        c.height = height;
+        ctx.drawImage(img, 0, 0);
+        resolve(height);
+      }
+      img.src = oldCanvas;
+    });
+
+    console.log("result for new canvas height: " + result);
   }
 
   // mock function to get a different image for id 8. To be replaced
@@ -79,8 +105,8 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: number[]}) 
 
   return <div className="grid">
     <canvas id="comboArea" className="
-    self-baseline place-self-center 
-    bg-cyan-900 rounded-md" 
+    self-baseline place-self-center
+    bg-cyan-900 rounded-md"
     width={canvasWidth} height={canvasHeight}>
     </canvas>
   </div>
