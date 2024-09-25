@@ -1,9 +1,7 @@
 import { ConstructingRule } from '../GameProfiles/ButtonStyling';
-import { DrawImageByRule } from './OutputMapper';
-import testimage from '../assets/Input_SVGs/ArrowD.svg';
-import testImage2 from '../assets/Input_SVGs/1B_B.svg';
+import { DrawImageByRule, TintSVGByValue } from './OutputMapper';
 
-export default function ComboCanvas({ buttonsToMap } : {commands: string[], buttonsToMap: number[]}) {
+export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: number[]}) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
@@ -14,6 +12,7 @@ export default function ComboCanvas({ buttonsToMap } : {commands: string[], butt
   let posX = MARGIN_X;
   let posY = MARGIN_Y;
 
+
   const c : HTMLCanvasElement | null = document.getElementById("comboArea") as HTMLCanvasElement;
   const ctx = c?.getContext("2d");
   ctx?.reset();
@@ -22,6 +21,7 @@ export default function ComboCanvas({ buttonsToMap } : {commands: string[], butt
     drawToCanvas();
   }
 
+  // TODO: Seperate into smaller functions for readability.
   async function drawToCanvas() {
     for (let i = 0; i < buttonsToMap.length; i++) {
       // Tried drawing another test image, too.
@@ -36,10 +36,22 @@ export default function ComboCanvas({ buttonsToMap } : {commands: string[], butt
         const imgHeight: number = 32;
         const image = new Image(imgWidth, imgHeight);
         const imageSrc = rules[j].src;
-        image.onload = () => drawImage(image, imgWidth, imgHeight, currentPosX, currentPosY);
-        image.src = imageSrc;
-        console.log(j);
-        if (j > 0) { break; }
+        
+        await new Promise<number>((resolve) => {image.onload = () => {
+          if (ctx !== null){
+            if (rules[j].color != undefined) {
+              const recanv: CanvasImageSource = TintSVGByValue(image, rules[j].color as string) as OffscreenCanvas;
+              ctx.drawImage(recanv, currentPosX, currentPosY);
+            } else {
+              ctx.drawImage(image, currentPosX, currentPosY);
+            }
+            resolve(j);
+            }
+          }
+          image.src = imageSrc;
+        });
+        
+        if (j > 0) { continue; }
         posX = posX + imgWidth + MARGIN_BETWEEN_X;
         if (posX > (canvasWidth - imgWidth - MARGIN_X)) {
           posX = MARGIN_X;

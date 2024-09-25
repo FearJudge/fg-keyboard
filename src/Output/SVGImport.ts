@@ -14,6 +14,7 @@ export {default as ButtonRight} from '../assets/Input_SVGs/ArrowR.svg';
 export {default as ButtonDownLeft} from '../assets/Input_SVGs/ArrowDL.svg';
 export {default as ButtonDown} from '../assets/Input_SVGs/ArrowD.svg';
 export {default as ButtonDownRight} from '../assets/Input_SVGs/ArrowDR.svg';
+export {default as NextMove} from '../assets/Input_SVGs/NextMove.svg';
 export {default as BracketOpen} from '../assets/Input_SVGs/BracketL.svg';
 export {default as BracketClose} from '../assets/Input_SVGs/BracketR.svg';
 export {default as JoystickQCF} from '../assets/Input_SVGs/MotionQCF.svg';

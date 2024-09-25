@@ -25,7 +25,7 @@ class InputParser
   public static ParseComboWithGame(Input:string){
     // Split the input by common delimiters,
     // but not delimiters inside parenthesis or brackets.
-    const commands = Input.split(/([\s]*-+[\s>]+|[\s.,;>]+)(?![^[(]*[\])])/);
+    const commands = Input.split(/([\s]*-+[\s>]+|[\s]*[.,;>]+)(?![^[(]*[\])])[\s]*/);
     console.log(commands);
     const commandArray: number[] = [];
     // Loop over the split input
@@ -34,12 +34,15 @@ class InputParser
       // Recursively search for instances of buttons within each block,
       // in case the notation does not delimit each button everytime
       const foundBtn: number[] = this.FindButtonCorrespondingToInput(command, []);
+      console.log(command);
       // If there are any buttons found, push them to an array.
       if (foundBtn.length >= 1) {
         for (const button of foundBtn)
         {
             commandArray.push(button);
         }
+      } else if (command != "" && command.match(/[,;>]+/) != null) {
+        commandArray.push(0);
       }
     }
     return commandArray;
