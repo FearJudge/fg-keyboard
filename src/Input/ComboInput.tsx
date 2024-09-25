@@ -1,32 +1,16 @@
 import { useState, useRef } from 'react';
 import InputParser from './InputParser';
+import { ComboDisplayProps } from './ComboDisplayProps';
 
 type InputProps = {
-  setButtons: (newButtons: number[] | undefined) => void;
+  setButtons: (newButtons: ComboDisplayProps) => void;
 };
-
-type ComboDisplayProps = {
-  ButtonsToDisplay: number[];
-  ExtraButtonDataToDisplay: string[];
-  CleanedInputPerButton: string[];
-  GameToUse: string;
-  Character: string;
-  AdditionalComboInputs: ExtraUserData;
-}
-
-type ExtraUserData = {
-  ComboDamage: number;
-  ComboName: string;
-  ComboNotes: string;
-  ComboRequirements: string;
-}
 
 // Takes user input and passes it to be parsed.
 // Potentially reactively expand input field to accomodate larger
 // inputs.
-function Input({setButtons}: InputProps) {
+export function Input({setButtons}: InputProps) {
   const [comboInput, setComboInput] = useState('');
-  const [cleanedInput, setCleanedInput] = useState('');
   const previousOutput = useRef([0]);
   const InputFieldBaseText: string = "Combo:";
   const InputFieldPlaceholder: string = "Type Combo Here!";
@@ -36,13 +20,25 @@ function Input({setButtons}: InputProps) {
     //For testing purposes, can switch between either or.
     // For quick testing with the game variant,
     // use abbreviations like: d u f lk hp or qcf
-    //setButtons(InputParser.ParseCombo(newComboVal));
     const buttons: number[] = InputParser.ParseComboWithGame(newComboVal);
+    const comboProps: ComboDisplayProps = {
+      ButtonsToDisplay: buttons,
+      ExtraButtonDataToDisplay: [""],
+      CleanedInputPerButton: InputParser.GetCleanedInputCommand(buttons),
+      GameToUse: "Street Fighter 2",
+      Character: "Ryu",
+      AdditionalComboInputs: {
+        ComboDamage: 0,
+        ComboName: "-",
+        ComboNotes: "-",
+        ComboRequirements: "-"
+      }
+    };
     if (!(buttons.length === previousOutput.current.length && 
       buttons.every((value, index) => 
       value === previousOutput.current[index]))) 
       {
-        setButtons(buttons); 
+        setButtons(comboProps); 
         console.log("Updating Output! || " + buttons.length + " VS: " + previousOutput.current.length);
         previousOutput.current = buttons; 
       }

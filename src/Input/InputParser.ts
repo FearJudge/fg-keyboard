@@ -1,4 +1,4 @@
-import { MotionReplacements, GeneralButtons, UserLabels } from "../GameProfiles/ButtonMapping";
+import { MotionReplacements, UserLabels } from "../GameProfiles/ButtonMapping";
 import { Games, GameFormat } from "../GameProfiles/Games";
 
 // Responsible for breaking down given string via the Game's
@@ -53,24 +53,24 @@ class InputParser
     function SetRegexRuleAndPropagate(button: number, fnd: string)
     {
       // If the game has the flag replaceMotions, it will take general motion inputs
-          // (such as qcf (quarter circle forward) and expand it to the buttons
-          // required to press when using the directional keys.
-          // Otherwise uses the id for that motion, which can typically be
-          // represented on a single image. 
-          if (game.replaceMotions && (button as number) in MotionReplacements) {
-            const key: number = (button as number);
-            const pushable: number[] = MotionReplacements[key];
-            for (const motionPart of pushable)
-            {
-              InputArray.push(motionPart);
-            }
-          } else {
-            InputArray.push(button as number);
-          }
-          Input = Input.replace(fnd, "");
-          if (Input.length <= 0) {return InputArray; }
-          InputArray = InputParser.FindButtonCorrespondingToInput(Input, InputArray);
-          return;
+      // (such as qcf (quarter circle forward) and expand it to the buttons
+      // required to press when using the directional keys.
+      // Otherwise uses the id for that motion, which can typically be
+      // represented on a single image. 
+      if (game.replaceMotions && (button as number) in MotionReplacements) {
+        const key: number = (button as number);
+        const pushable: number[] = MotionReplacements[key];
+        for (const motionPart of pushable)
+        {
+          InputArray.push(motionPart);
+        }
+      } else {
+          InputArray.push(button as number);
+      }
+      Input = Input.replace(fnd, "");
+      if (Input.length <= 0) {return InputArray; }
+      InputArray = InputParser.FindButtonCorrespondingToInput(Input, InputArray);
+      return;
     }
     // This needs to be fetched from some variable or state later on.
     const game: GameFormat = Games.StreetFighter2;
@@ -101,9 +101,28 @@ class InputParser
     return InputArray;
   }
 
-  public static GetRelevantInfoForComboDisplay()
+  public static GetCleanedInputCommand(InputArray: number[])
   {
-
+    const game: GameFormat = Games.StreetFighter2;
+    const cleanedInput: string[] = [];
+    let flagForAddition: boolean = false;
+    for (let i = 0; i < InputArray.length; i++)
+    {
+      let input: string = "";
+      // Get the string expression of the regex or ">" if not found.a
+      if (InputArray[i] == 0) { cleanedInput.push(" > "); flagForAddition = false; continue; }
+      const data: [RegExp, number, string?, number?] | undefined = Object.entries(game.buttonRegexes).find((a) => a[1][1] == InputArray[i])?.[1];
+      console.log(data??[3]);
+      if (data != undefined && data[3] == 1) {
+        if (flagForAddition) { input += "+"; }
+        else { flagForAddition = true; }
+      } else { flagForAddition = false; }
+      if (data == undefined) { input += "?" }
+      else { input += data[2]?? "!!!"; }
+      if (!flagForAddition) { input += " "; }
+      cleanedInput.push(input);
+    }
+    return cleanedInput;
   }
 }
 

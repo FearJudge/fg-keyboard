@@ -7,7 +7,12 @@ import * as OutputImages from "../Output/SVGImport"
 export type GameFormat = {
   displayName: string;
   replaceMotions?: boolean;
-  buttonRegexes: { [key: string]: [RegExp, number, string?] };
+  // Definitions:
+  // RegExp: The expression to define this button.
+  // number: the id number
+  // string?: an optional clean input representation.
+  // number?: an optional type. 1 for combinable attacks (displayed with +).
+  buttonRegexes: { [key: string]: [RegExp, number, string?, number?] };
   displayRules: { [key: number]: ConstructingRule[] };
 }
 
@@ -19,12 +24,12 @@ export const Games: { [key: string]: GameFormat } = {
     buttonRegexes: {
       ...GenericMotions,
       ...GenericMovement,
-      lp: [/([lL](ight)?[pP](unch)?)/, 10],
-      mp: [/([mM](ed)?(ium)?[pP](unch)?)/, 11],
-      hp: [/([hH](ard|eavy)?[pP](unch)?)/, 12],
-      lk: [/([lL](ight)?[kK](ick)?)/, 13],
-      mk: [/([mM](ed)?(ium)?[kK](ick)?)/, 14],
-      hk: [/([hH](ard|eavy)?[kK](ick)?)/, 15]
+      lp: [/([lL](ight)?[pP](unch)?)/, 10, "LP", 1],
+      mp: [/([mM](ed)?(ium)?[pP](unch)?)/, 11, "MP", 1],
+      hp: [/([hH](ard|eavy)?[pP](unch)?)/, 12, "HP", 1],
+      lk: [/([lL](ight)?[kK](ick)?)/, 13, "LK", 1],
+      mk: [/([mM](ed)?(ium)?[kK](ick)?)/, 14, "MK", 1],
+      hk: [/([hH](ard|eavy)?[kK](ick)?)/, 15, "HK", 1]
     },
     displayRules: {
       ...GenericDetails,
