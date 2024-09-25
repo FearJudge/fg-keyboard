@@ -12,6 +12,9 @@ function App() {
   // NOTE: decide the type of buttonSequence later, here thought to be an
   // Array of id numbers. If changed, update the type of newButtons accordingly.
   const [buttonSequence, setButtonSequence] = useState<ComboDisplayProps>(BaseComboProps);
+  // default 266, 586 or 906 for outputWidth state -> mark the corresponding radio input
+  // defaultChecked in WidthInput.tsx
+  const [outputWidth, setOutputWidth] = useState(266);
 
   function setButtons(comboProps: ComboDisplayProps) {
     if (comboProps !== undefined) {
@@ -24,8 +27,8 @@ function App() {
       <h1>Combo Writer</h1>
       <GameSelector />
       <CharSelector />
-      <Fgcinput setButtons={setButtons} />
-      <Fgcoutput buttonsToMap={buttonSequence} commands={[]}/>
+      <Fgcinput setButtons={setButtons} setWidth={setOutputWidth}/>
+      <Fgcoutput buttonsToMap={buttonSequence} outputWidth={outputWidth} />
     </>
   )
 }

@@ -1,13 +1,13 @@
 import { ConstructingRule } from "../GameProfiles/ButtonStyling";
 import { DrawImageByRule, TintSVGByValue } from "./OutputMapper";
 
-export function drawCombo(buttonsToMap: number[]) {
+export function drawCombo(buttonsToMap: number[], outputWidth: number) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
   const MARGIN_BETWEEN_Y = 0;
 
-  let canvasWidth = 400;
+  const canvasWidth = outputWidth;
   let canvasHeight = 42;
   let posX = MARGIN_X;
   let posY = MARGIN_Y;
@@ -87,5 +87,5 @@ export function drawCombo(buttonsToMap: number[]) {
       image.src = rule.src;
     });
   }
-  return { canvasWidth, canvasHeight };
+  return canvasHeight;
 }
