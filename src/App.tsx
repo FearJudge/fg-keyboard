@@ -6,6 +6,7 @@ import Fgcinput from './Input/ComboInput';
 import { ComboDisplayProps } from './Input/ComboDisplayProps';
 import BaseComboProps from './Input/DefaultComboValues';
 import Fgcoutput from './Output/Output';
+import comboukenLogo from './assets/combouken_ph_logo.png'
 
 
 function App() {
@@ -24,7 +25,10 @@ function App() {
 
   return (
     <>
-      <h1>Combo Writer</h1>
+      <div className='flex justify-center items-center'>
+        <img src={comboukenLogo}></img>
+      </div>
+      <p>Fighting Game Combos</p>
       <GameSelector />
       <CharSelector />
       <Fgcinput setButtons={setButtons} setWidth={setOutputWidth}/>
