@@ -1,17 +1,20 @@
-import { GenericMotions, GenericMovement, numPadMovement } from "./ButtonMapping";
-import { ConstructingRule, GenericArrowStyling, GenericDetails, GenericMotionStyling } from "./ButtonStyling";
+import { GenericMotions, GenericMovement, GenericStances, numPadMovement } from "./ButtonMapping";
+import { ConstructingRule, GenericArrowStyling, GenericDetails, GenericMotionStyling, GenericPositionModifiers } from "./ButtonStyling";
 import * as OutputImages from "../Output/SVGImport"
 
 // Type that defines the format in which games should be structured with.
 // You may add to this if needed.
 export type GameFormat = {
   displayName: string;
+  characters?: string[];
   replaceMotions?: boolean;
   // Definitions:
   // RegExp: The expression to define this button.
   // number: the id number
   // string?: an optional clean input representation.
-  // number?: an optional type. 1 for combinable attacks (displayed with +).
+  // number?: an optional type. 
+  //   1 for combinable attacks (displayed with +)
+  //   2 for modifiers.
   buttonRegexes: { [key: string]: [RegExp, number, string?, number?] };
   displayRules: { [key: number]: ConstructingRule[] };
 }
@@ -19,9 +22,16 @@ export type GameFormat = {
 // A listing of games.
 export const Games: { [key: string]: GameFormat } = {
   StreetFighter2: {
-    displayName: "Street Fighter 2",
+    displayName: "Ultra Street Fighter 2: The Final Challenger",
+    characters: [
+      "Akuma",    "Balrog",   "Blanka",       "Cammy",    "Chun-Li",
+      "Dee Jay",  "Dhalsim",  "E. Honda",     "Evil Ryu", "Fei Long",
+      "Guile",    "Ken",      "M. Bison",     "Ryu",      "Sagat",
+      "T. Hawk",  "Vega",     "Violent Ken",  "Zangief"
+    ],
     replaceMotions: true,
     buttonRegexes: {
+      ...GenericStances,
       ...GenericMotions,
       ...GenericMovement,
       lp: [/([lL](ight)?[pP](unch)?)/, 10, "LP", 1],
@@ -33,6 +43,7 @@ export const Games: { [key: string]: GameFormat } = {
     },
     displayRules: {
       ...GenericDetails,
+      ...GenericPositionModifiers,
       ...GenericArrowStyling,
       ...GenericMotionStyling,
       10: [{ src: OutputImages.SingleButtonBase, color: "#6E6EFF" },

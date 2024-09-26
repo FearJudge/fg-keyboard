@@ -1,6 +1,11 @@
 import { MotionReplacements, UserLabels } from "../GameProfiles/ButtonMapping";
 import { Games, GameFormat } from "../GameProfiles/Games";
 
+export type InputData = {
+  buttons: number[],
+  extra: string[]
+}
+
 // Responsible for breaking down given string via the Game's
 // buttonmapping profile.
 class InputParser
@@ -12,46 +17,55 @@ class InputParser
     while (i < inputText.length && i > -1) {
       i = inputText.indexOf("A", i);
       if (i > -1) {
-        console.log("Found: " + i);
         results.push(i);
         i++;
       }
     }
-    console.log("Results: " + results);
     return results;
   }
 
   // Uses a game profile to match inputs
-  public static ParseComboWithGame(Input:string){
+  public static ParseComboWithGame( Input: string ){
+
     // Split the input by common delimiters,
     // but not delimiters inside parenthesis or brackets.
-    const commands = Input.split(/([\s]*-+[\s>]+|[\s]*[.,;>]+)(?![^[(]*[\])])[\s]*/);
-    console.log(commands);
+    const commands = Input.split(/([\s]*-+[\s>]+|[\s]*[,;>]+)(?![^[(]*[\])])[\s]*/);
     const commandArray: number[] = [];
+    const extraArray: string[] = [];
     // Loop over the split input
     for (const command of commands)
     {
       // Recursively search for instances of buttons within each block,
       // in case the notation does not delimit each button everytime
-      const foundBtn: number[] = this.FindButtonCorrespondingToInput(command, []);
-      console.log(command);
+      const foundBtn: InputData = this.FindButtonCorrespondingToInput(command, [], []);
       // If there are any buttons found, push them to an array.
-      if (foundBtn.length >= 1) {
-        for (const button of foundBtn)
+      if (foundBtn.buttons.length >= 1) {
+        for (const button of foundBtn.buttons)
         {
             commandArray.push(button);
+            extraArray.push("");
         }
       } else if (command != "" && command.match(/[,;>]+/) != null) {
         commandArray.push(0);
+        extraArray.push("");
       }
     }
-    return commandArray;
+    return { 
+      buttons: commandArray,
+      extra: extraArray
+    };
   }
 
-  public static FindButtonCorrespondingToInput(Input:string, InputArray:number[])
+  public static FindButtonCorrespondingToInput(Input: string, InputArray: number[], ExtraArray: string[])
   {
     function SetRegexRuleAndPropagate(button: number, fnd: string)
     {
+      function SetButtonAndExtraData(button: number, input: string)
+      {
+          InputArray.push(button);
+          ExtraArray.push(input);
+      }
+
       // If the game has the flag replaceMotions, it will take general motion inputs
       // (such as qcf (quarter circle forward) and expand it to the buttons
       // required to press when using the directional keys.
@@ -62,23 +76,24 @@ class InputParser
         const pushable: number[] = MotionReplacements[key];
         for (const motionPart of pushable)
         {
-          InputArray.push(motionPart);
+          SetButtonAndExtraData(motionPart, "");
         }
       } else {
-          InputArray.push(button as number);
+        SetButtonAndExtraData(button, fnd);
       }
       Input = Input.replace(fnd, "");
       if (Input.length <= 0) {return InputArray; }
-      InputArray = InputParser.FindButtonCorrespondingToInput(Input, InputArray);
+      returnVal = InputParser.FindButtonCorrespondingToInput(Input, InputArray, ExtraArray);
       return;
     }
+    let returnVal: InputData = { buttons: InputArray, extra: ExtraArray }
     // This needs to be fetched from some variable or state later on.
     const game: GameFormat = Games.StreetFighter2;
     let lowestIndex: number = 9999;
     let bestString: string | undefined;
     let bestButton: number | undefined;
 
-    if (Input.length <= 0) {return InputArray; }
+    if (Input.length <= 0) {return returnVal; }
     // Iterate over game rules and generic rules for our program.
     for (const [, [regex, button]] of 
       Object.entries(game.buttonRegexes).concat(Object.entries(UserLabels)))
@@ -98,7 +113,7 @@ class InputParser
     }
     // Consume the found input and try to find more.
     if (bestButton && bestString) { SetRegexRuleAndPropagate(bestButton, bestString) }
-    return InputArray;
+    return returnVal;
   }
 
   public static GetCleanedInputCommand(InputArray: number[])
@@ -112,7 +127,6 @@ class InputParser
       // Get the string expression of the regex or ">" if not found.a
       if (InputArray[i] == 0) { cleanedInput.push(" > "); flagForAddition = false; continue; }
       const data: [RegExp, number, string?, number?] | undefined = Object.entries(game.buttonRegexes).find((a) => a[1][1] == InputArray[i])?.[1];
-      console.log(data??[3]);
       if (data != undefined && data[3] == 1) {
         if (flagForAddition) { input += "+"; }
         else { flagForAddition = true; }

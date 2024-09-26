@@ -1,8 +1,9 @@
-import { Fallback } from "../GameProfiles/ButtonStyling"
+import { Fallback, Labels } from "../GameProfiles/ButtonStyling"
 import { Games } from "../GameProfiles/Games";
 
 export function DrawImageByRule(id: number){
   const g = Games.StreetFighter2;
+  if (id >= 300 && id <= 305) { return Labels[id]; }
   return g.displayRules[id] ? g.displayRules[id] : [Fallback];
 }
 

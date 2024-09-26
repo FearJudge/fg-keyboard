@@ -1,7 +1,8 @@
+import { ComboDisplayProps } from '../Input/ComboDisplayProps';
 import { drawCombo } from './drawCombo';
 import ComboSaver from './OutputSaver';
 
-export default function ComboCanvas({ buttonsToMap, outputWidth }: {buttonsToMap: number[], outputWidth: number}) {
+export default function ComboCanvas({ buttonsToMap, outputWidth }: {buttonsToMap: ComboDisplayProps, outputWidth: number}) {
   const canvasHeight = drawCombo(buttonsToMap, outputWidth);
 
   return <div id="outputDisplay" className="grid">

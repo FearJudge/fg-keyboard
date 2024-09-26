@@ -8,7 +8,7 @@ export default function Output({buttonsToMap, outputWidth} : {buttonsToMap: Comb
   return (
     <div className="self-center py-3 h-24">
       <>
-        <ComboCanvas buttonsToMap={buttonsToMap.ButtonsToDisplay} outputWidth={outputWidth} />
+        <ComboCanvas buttonsToMap={buttonsToMap} outputWidth={outputWidth} />
       </>
       <p> {buttonsToMap.CleanedInputPerButton.join('')} </p>
       <p>Canvas width: {outputWidth}</p>

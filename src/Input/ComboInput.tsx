@@ -22,11 +22,11 @@ export function Input({setButtons, setWidth}: InputProps) {
     //For testing purposes, can switch between either or.
     // For quick testing with the game variant,
     // use abbreviations like: d u f lk hp or qcf
-    const buttons: number[] = InputParser.ParseComboWithGame(newComboVal);
+    const inputData: { buttons: number[], extra: string[] } = InputParser.ParseComboWithGame(newComboVal);
     const comboProps: ComboDisplayProps = {
-      ButtonsToDisplay: buttons,
-      ExtraButtonDataToDisplay: [""],
-      CleanedInputPerButton: InputParser.GetCleanedInputCommand(buttons),
+      ButtonsToDisplay: inputData.buttons,
+      ExtraButtonDataToDisplay: inputData.extra,
+      CleanedInputPerButton: InputParser.GetCleanedInputCommand(inputData.buttons),
       GameToUse: "Street Fighter 2",
       Character: "Ryu",
       AdditionalComboInputs: {
@@ -36,13 +36,13 @@ export function Input({setButtons, setWidth}: InputProps) {
         ComboRequirements: "-"
       }
     };
-    if (!(buttons.length === previousOutput.current.length &&
-      buttons.every((value, index) =>
+    if (!(inputData.buttons.length === previousOutput.current.length &&
+      inputData.buttons.every((value, index) =>
       value === previousOutput.current[index])))
       {
         setButtons(comboProps);
-        console.log("Updating Output! || " + buttons.length + " VS: " + previousOutput.current.length);
-        previousOutput.current = buttons;
+        console.log("Updating Output! || " + inputData.buttons.length + " VS: " + previousOutput.current.length);
+        previousOutput.current = inputData.buttons;
       }
     setComboInput(newComboVal);
   }

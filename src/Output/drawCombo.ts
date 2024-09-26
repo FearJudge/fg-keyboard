@@ -1,7 +1,8 @@
-import { ConstructingRule } from "../GameProfiles/ButtonStyling";
+import { ConstructingRule, NOIMAGESTRING } from "../GameProfiles/ButtonStyling";
+import { ComboDisplayProps } from "../Input/ComboDisplayProps";
 import { DrawImageByRule, TintSVGByValue } from "./OutputMapper";
 
-export function drawCombo(buttonsToMap: number[], outputWidth: number) {
+export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
@@ -21,11 +22,15 @@ export function drawCombo(buttonsToMap: number[], outputWidth: number) {
   ctx?.reset();
 
   drawToCanvas();
+  console.log(buttonsToMap.ButtonsToDisplay);
+  console.log(buttonsToMap.ExtraButtonDataToDisplay);
 
   async function drawToCanvas() {
-    for (let i = 0; i < buttonsToMap.length; i++) {
+    let carryRules: ConstructingRule[] = [];
+    for (let i = 0; i < buttonsToMap.ButtonsToDisplay.length; i++) {
       if (ctx == null) { return; }
-      const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap[i]);
+      const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i]);
+      if (rules[0].src == NOIMAGESTRING) { carryRules = carryRules.concat(rules); continue; }
 
       const imgWidth: number = 32;
       const imgHeight: number = 32;
@@ -34,12 +39,20 @@ export function drawCombo(buttonsToMap: number[], outputWidth: number) {
       const currentPosX = posX;
       const currentPosY = posY;
 
-      for (let j = 0; j < rules.length; j++) {
-        const image = new Image(imgWidth, imgHeight);
-        await drawImageOnThePosition(image, rules[j], j, currentPosX, currentPosY);
+      for (let j = 0; j < rules.concat(carryRules).length; j++) {
+        const rule: ConstructingRule = rules.concat(carryRules)[j];
+        if (rule.src == NOIMAGESTRING) {
+          const userText = (buttonsToMap.ExtraButtonDataToDisplay.length > i)? 
+          buttonsToMap.ExtraButtonDataToDisplay[i] : undefined;
+          drawTextOnImage(rule, j, currentPosX, currentPosY, userText);
+        } else {
+          const image = new Image(imgWidth, imgHeight);
+          await drawImageOnThePosition(image, rule, j, currentPosX, currentPosY);
+        }
       }
 
       posX = posX + imgWidth + MARGIN_BETWEEN_X;
+      carryRules = [];
     }
   }
 
@@ -71,6 +84,20 @@ export function drawCombo(buttonsToMap: number[], outputWidth: number) {
     console.log("result for new canvas height: " + result);
   }
 
+  async function drawTextOnImage(rule: ConstructingRule, index: number, curX: number, curY: number, text?: string) {
+    await new Promise<number>((resolve) => {
+      if (ctx == null) { resolve(index); return; }
+      ctx.font = rule.printoverride?? "16px Dosis";
+      ctx.fillStyle = rule.color?? "#ffffff";
+      ctx.fillText(
+        rule.print?? text?? "-",
+        rule.printoffset? rule.printoffset[0] + curX : curX,
+        rule.printoffset? rule.printoffset[1] + curY : curY
+      )
+      resolve(index);
+    });
+  }
+
   async function drawImageOnThePosition(image: HTMLImageElement, rule: ConstructingRule, index: number, curX: number, curY: number) {
     await new Promise<number>((resolve) => {
       image.onload = () => {
@@ -87,5 +114,6 @@ export function drawCombo(buttonsToMap: number[], outputWidth: number) {
       image.src = rule.src;
     });
   }
+    
   return canvasHeight;
 }

@@ -4,7 +4,7 @@
 export default function OpenSave(e: React.MouseEvent<HTMLButtonElement>)
 {
   const anchor: HTMLAnchorElement = document.createElement("a");
-  anchor.href = (document.getElementById("comboArea") as HTMLCanvasElement).toDataURL("image/png");
+  anchor.href = (document.getElementById("comboArea") as HTMLCanvasElement).toDataURL("image/png").replace("image/png", "");
   const date = new Date();
   const dateStr: string = "UnnamedCombo-" + date.getDay() + date.getMonth() + date.getFullYear() + "-" + date.getTime() + ".png";
   anchor.download = dateStr;

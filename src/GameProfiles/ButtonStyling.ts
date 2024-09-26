@@ -1,17 +1,20 @@
 import * as Images from "../Output/SVGImport"
 // Contains general presentation layout of IDs
 // Helps avoid repetition, especially until we get more art to use.
+export const NOIMAGESTRING: string = "No-Printable-Image";
 
 export type ConstructingRule = {
   src: string;
   color?: string;
-  offset?: [number, number];
+  printoffset?: [number, number];
+  printoverride?: string;
+  print?: string;
 }
 
 export const Fallback: ConstructingRule = {
   src: Images.SingleButtonA,
   color: "#ffffff",
-  offset: [0, 0],
+  printoffset: [0, 0],
 }
 
 export const GenericDetails: { [key: number]: ConstructingRule[] } = {
@@ -65,5 +68,73 @@ export const GenericMotionStyling: { [key: number]: ConstructingRule[] } = {
   },
   {
     src: Images.JoystickQCB
+  }]
+};
+
+// General presentation of position modifier.
+export const GenericPositionModifiers: { [key: number]: ConstructingRule[] } = {
+  200: [{
+    src: NOIMAGESTRING,
+    print: "St.",
+    printoffset: [-3, 33]
+  }],
+  201: [{
+    src: NOIMAGESTRING,
+    print: "Cr.",
+    printoffset: [-3, 33]
+  }],
+  202: [{
+    src: NOIMAGESTRING,
+    print: "J.",
+    color: "#E2E2FF",
+    printoffset: [-3, 33]
+  }],
+  203: [{
+    src: NOIMAGESTRING,
+    print: "N.J.",
+    printoffset: [-3, 33]
+  }],
+  204: [{
+    src: NOIMAGESTRING,
+    print: "Cl.",
+    printoffset: [-3, 33]
+  }],
+  205: [{
+    src: NOIMAGESTRING,
+    print: "Far.",
+    printoffset: [-3, 33]
+  }],
+  206: [{
+    src: NOIMAGESTRING,
+    print: "(Miss).",
+    printoverride: "10px Dosis",
+    printoffset: [-3, 33]
+  }]
+};
+
+export const Labels: { [key: number]: ConstructingRule[] } = {
+  300: [{
+    src: NOIMAGESTRING,
+    printoffset: [-3, 33]
+  }],
+  301: [{
+    src: NOIMAGESTRING,
+    printoffset: [-3, 33]
+  }],
+  302: [{
+    src: NOIMAGESTRING,
+    printoffset: [-3, 33]
+  }],
+  303: [{
+    src: NOIMAGESTRING,
+    printoffset: [-3, 33]
+  }],
+  304: [{
+    src: NOIMAGESTRING,
+    printoffset: [-3, 33]
+  }],
+  305: [{
+    src: NOIMAGESTRING,
+    printoffset: [-3, 33]
   }]
 };
