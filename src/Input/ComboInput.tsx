@@ -14,6 +14,7 @@ type InputProps = {
 export function Input({setButtons, setWidth}: InputProps) {
   const [comboInput, setComboInput] = useState('');
   const previousOutput = useRef([0]);
+  const previousExtra = useRef([""]);
   const InputFieldBaseText: string = "Combo:";
   const InputFieldPlaceholder: string = "Type Combo Here!";
 
@@ -26,7 +27,7 @@ export function Input({setButtons, setWidth}: InputProps) {
     const comboProps: ComboDisplayProps = {
       ButtonsToDisplay: inputData.buttons,
       ExtraButtonDataToDisplay: inputData.extra,
-      CleanedInputPerButton: InputParser.GetCleanedInputCommand(inputData.buttons),
+      CleanedInputPerButton: InputParser.GetCleanedInputCommand(inputData.buttons, inputData.extra),
       GameToUse: "Street Fighter 2",
       Character: "Ryu",
       AdditionalComboInputs: {
@@ -38,11 +39,15 @@ export function Input({setButtons, setWidth}: InputProps) {
     };
     if (!(inputData.buttons.length === previousOutput.current.length &&
       inputData.buttons.every((value, index) =>
-      value === previousOutput.current[index])))
+      value === previousOutput.current[index])) || !((inputData.extra.length === previousExtra.current.length &&
+        inputData.extra.every((value, index) =>
+        value === previousExtra.current[index])
+      )))
       {
         setButtons(comboProps);
         console.log("Updating Output! || " + inputData.buttons.length + " VS: " + previousOutput.current.length);
         previousOutput.current = inputData.buttons;
+        previousExtra.current = inputData.extra;
       }
     setComboInput(newComboVal);
   }

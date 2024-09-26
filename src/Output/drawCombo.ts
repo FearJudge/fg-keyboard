@@ -32,7 +32,8 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number) 
       const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i]);
       if (rules[0].src == NOIMAGESTRING) { carryRules = carryRules.concat(rules); continue; }
 
-      const imgWidth: number = 32;
+      const imgWidth: number = (buttonsToMap.ExtraButtonDataToDisplay[i] == "")? 32 : 
+      determineWidth(rules, buttonsToMap.ExtraButtonDataToDisplay[i].length, 32);
       const imgHeight: number = 32;
       await makeNewRowIfNeeded(imgWidth, imgHeight);
 
@@ -47,7 +48,7 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number) 
           drawTextOnImage(rule, j, currentPosX, currentPosY, userText);
         } else {
           const image = new Image(imgWidth, imgHeight);
-          await drawImageOnThePosition(image, rule, j, currentPosX, currentPosY);
+          await drawImageOnThePosition(image, rule, j, currentPosX, currentPosY, imgWidth);
         }
       }
 
@@ -98,10 +99,14 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number) 
     });
   }
 
-  async function drawImageOnThePosition(image: HTMLImageElement, rule: ConstructingRule, index: number, curX: number, curY: number) {
+  async function drawImageOnThePosition(image: HTMLImageElement, rule: ConstructingRule, index: number, curX: number, curY: number, width: number) {
     await new Promise<number>((resolve) => {
       image.onload = () => {
         if (ctx !== null) {
+          if (rule.printoverride == "END") {
+            curX += width - 32;
+            console.log(curX);
+          }
           if (rule.color != undefined) {
             const recanv: CanvasImageSource = TintSVGByValue(image, rule.color as string) as OffscreenCanvas;
             ctx.drawImage(recanv, curX, curY);
@@ -117,3 +122,19 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number) 
     
   return canvasHeight;
 }
+
+function determineWidth(rules: ConstructingRule[], length: number, defWidth: number): number {
+  let w: number = 0;
+  for (let i = 0; i < rules.length; i++)
+  {
+    if (rules[i].overrideWidth != undefined) {
+      const newWidth = (typeof(rules[i].overrideWidth) == "number")? 
+      rules[i].overrideWidth as number : (rules[i].overrideWidth as { 
+        perCharacter: number })["perCharacter"] * (length);
+       w += newWidth;
+    }
+  }
+  if (w == 0) { return defWidth; }
+  return w;
+}
+
