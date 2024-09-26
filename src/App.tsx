@@ -25,12 +25,16 @@ function App() {
 
   return (
     <>
-      <div className='flex justify-center items-center'>
-        <img src={comboukenLogo}></img>
+      <div className="mb-12">
+        <div className="flex justify-center items-center">
+          <img src={comboukenLogo} className="w-72"/>
+        </div>
+        <h1 className='font-sans'>Fighting Game Combos</h1>
       </div>
-      <p>Fighting Game Combos</p>
-      <GameSelector />
-      <CharSelector />
+      <div className="mb-8">
+        <GameSelector />
+        <CharSelector />
+      </div>
       <Fgcinput setButtons={setButtons} setWidth={setOutputWidth}/>
       <Fgcoutput buttonsToMap={buttonSequence} outputWidth={outputWidth} />
     </>

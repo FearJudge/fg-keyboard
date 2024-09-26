@@ -58,10 +58,10 @@ export function Input({setButtons, setWidth}: InputProps) {
         <textarea className="shadow appearance-none
           bg-transparent text-wrap text-xl
           text-center font-medium row-span-full
-          font-sans h-auto w-4/5
+          font-sans h-auto w-7/12
           border rounded-xl py-2 px-3
           focus:text-blue-200 text-gray-100
-          placeholder:text-blue-800
+          placeholder:text-gray-600
           leading-tight
           focus:outline-none focus:shadow-2xl
           focus:shadow-white
