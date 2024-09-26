@@ -6,6 +6,7 @@ export const NOIMAGESTRING: string = "No-Printable-Image";
 export type ConstructingRule = {
   src: string;
   color?: string;
+  overrideWidth?: number | { perCharacter: number };
   printoffset?: [number, number];
   printoverride?: string;
   print?: string;
@@ -114,27 +115,63 @@ export const GenericPositionModifiers: { [key: number]: ConstructingRule[] } = {
 
 export const Labels: { [key: number]: ConstructingRule[] } = {
   300: [{
+    src: Images.BracketOpen,
+    overrideWidth: 24
+  },
+  {
     src: NOIMAGESTRING,
-    printoffset: [-3, 33]
+    printoffset: [24, 23],
+    printoverride: "22px Monospace",
+    overrideWidth: { perCharacter: 12 }
+  },
+  {
+    src: Images.BracketClose,
+    printoverride: "END",
+    overrideWidth: 24
   }],
   301: [{
+    src: Images.BracketOpen,
+    overrideWidth: 24
+  },
+  {
     src: NOIMAGESTRING,
-    printoffset: [-3, 33]
+    printoffset: [24, 23],
+    printoverride: "16px Monospace",
+    overrideWidth: { perCharacter: 9 }
+  },
+  {
+    src: Images.BracketClose,
+    printoverride: "END",
+    overrideWidth: 24
   }],
   302: [{
+    src: Images.BracketOpen,
+    overrideWidth: 24
+  },
+  {
     src: NOIMAGESTRING,
-    printoffset: [-3, 33]
+    printoffset: [24, 23],
+    printoverride: "22px Monospace",
+    overrideWidth: { perCharacter: 12 }
+  },
+  {
+    src: Images.BracketClose,
+    printoverride: "END",
+    overrideWidth: 24
   }],
   303: [{
+    src: Images.BracketOpen,
+    overrideWidth: 24
+  },
+  {
     src: NOIMAGESTRING,
-    printoffset: [-3, 33]
+    printoffset: [24, 23],
+    printoverride: "22px Monospace",
+    overrideWidth: { perCharacter: 12 }
+  },
+  {
+    src: Images.BracketClose,
+    printoverride: "END",
+    overrideWidth: 24
   }],
-  304: [{
-    src: NOIMAGESTRING,
-    printoffset: [-3, 33]
-  }],
-  305: [{
-    src: NOIMAGESTRING,
-    printoffset: [-3, 33]
-  }]
 };

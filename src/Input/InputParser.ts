@@ -1,4 +1,4 @@
-import { MotionReplacements, UserLabels } from "../GameProfiles/ButtonMapping";
+import { GenericStances, MotionReplacements, RANGEOFLABELS, RANGEOFMODIFIERS, UserLabels } from "../GameProfiles/ButtonMapping";
 import { Games, GameFormat } from "../GameProfiles/Games";
 
 export type InputData = {
@@ -40,10 +40,9 @@ class InputParser
       const foundBtn: InputData = this.FindButtonCorrespondingToInput(command, [], []);
       // If there are any buttons found, push them to an array.
       if (foundBtn.buttons.length >= 1) {
-        for (const button of foundBtn.buttons)
-        {
-            commandArray.push(button);
-            extraArray.push("");
+        for (let i = 0; i < foundBtn.buttons.length; i++) {
+            commandArray.push(foundBtn.buttons[i]);
+            extraArray.push(foundBtn.extra[i]);
         }
       } else if (command != "" && command.match(/[,;>]+/) != null) {
         commandArray.push(0);
@@ -58,12 +57,18 @@ class InputParser
 
   public static FindButtonCorrespondingToInput(Input: string, InputArray: number[], ExtraArray: string[])
   {
-    function SetRegexRuleAndPropagate(button: number, fnd: string)
+    function SetRegexRuleAndPropagate(button: number, fnd: string, modifier?: string)
     {
-      function SetButtonAndExtraData(button: number, input: string)
+      function SetButtonAndExtraData(button: number, input: string, modifier?: string)
       {
           InputArray.push(button);
-          ExtraArray.push(input);
+          if (button >= RANGEOFMODIFIERS[0] && button <= RANGEOFMODIFIERS[1]) {
+            ExtraArray.push(Object.entries(GenericStances).find(p => p[1][1] == button)?.[1][2] as string);
+          } else if ( button >= RANGEOFLABELS[0] && button <= RANGEOFLABELS[1] ) {
+            ExtraArray.push(input.trim().replace(/[([)\]]*/g, ""));
+          } else {
+            ExtraArray.push(modifier?? "");
+          }
       }
 
       // If the game has the flag replaceMotions, it will take general motion inputs
@@ -76,10 +81,10 @@ class InputParser
         const pushable: number[] = MotionReplacements[key];
         for (const motionPart of pushable)
         {
-          SetButtonAndExtraData(motionPart, "");
+          SetButtonAndExtraData(motionPart, "", "");
         }
       } else {
-        SetButtonAndExtraData(button, fnd);
+        SetButtonAndExtraData(button, fnd, modifier);
       }
       Input = Input.replace(fnd, "");
       if (Input.length <= 0) {return InputArray; }
@@ -92,10 +97,11 @@ class InputParser
     let lowestIndex: number = 9999;
     let bestString: string | undefined;
     let bestButton: number | undefined;
+    let modifier: string | undefined;
 
     if (Input.length <= 0) {return returnVal; }
     // Iterate over game rules and generic rules for our program.
-    for (const [, [regex, button]] of 
+    for (const [, [regex, button, clean, type]] of 
       Object.entries(game.buttonRegexes).concat(Object.entries(UserLabels)))
     {
       // Search for the first match that starts from the 
@@ -108,15 +114,16 @@ class InputParser
           lowestIndex = index
           bestString = fnd[0]; 
           bestButton = button;
+          if (type == 2) { modifier = clean; } else { modifier = undefined; } 
         }
       }
     }
     // Consume the found input and try to find more.
-    if (bestButton && bestString) { SetRegexRuleAndPropagate(bestButton, bestString) }
+    if (bestButton && bestString) { SetRegexRuleAndPropagate(bestButton, bestString, modifier) }
     return returnVal;
   }
 
-  public static GetCleanedInputCommand(InputArray: number[])
+  public static GetCleanedInputCommand(InputArray: number[], ExtraArray: string[])
   {
     const game: GameFormat = Games.StreetFighter2;
     const cleanedInput: string[] = [];
@@ -131,7 +138,9 @@ class InputParser
         if (flagForAddition) { input += "+"; }
         else { flagForAddition = true; }
       } else { flagForAddition = false; }
-      if (data == undefined) { input += "?" }
+      if (data == undefined) { 
+        input += (ExtraArray[i] !== "")? "(" + ExtraArray[i] + ")" : "?"; 
+      }
       else { input += data[2]?? "!!!"; }
       if (!flagForAddition) { input += " "; }
       cleanedInput.push(input);
