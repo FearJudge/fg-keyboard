@@ -6,7 +6,7 @@ import ComboCanvas from './ComboCanvas';
 // (Character, Combo Damage, Additional Notes etc.)
 export default function Output({buttonsToMap, outputWidth} : {buttonsToMap: ComboDisplayProps, outputWidth: number}) {
   return (
-    <div className="self-center py-3 h-24">
+    <div className="self-center py-1 h-24">
       <>
         <ComboCanvas buttonsToMap={buttonsToMap} outputWidth={outputWidth} />
       </>

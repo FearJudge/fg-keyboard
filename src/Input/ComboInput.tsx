@@ -16,7 +16,7 @@ export function Input({setButtons, setWidth}: InputProps) {
   const [comboInput, setComboInput] = useState('');
   const previousOutput = useRef([0]);
   const previousExtra = useRef([""]);
-  const InputFieldBaseText: string = "Combo:";
+  const InputFieldBaseText: string = "COMBO:";
   const InputFieldPlaceholder: string = "Type Combo Here!";
   const rctx = useContext(GameContext);
 
@@ -57,21 +57,21 @@ export function Input({setButtons, setWidth}: InputProps) {
   return (
     <>
       <WidthInput setWidth={setWidth} />
-      <div className="self-center py-3 h-36" >
+      <div className="self-center py-2" >
         <label className="block text-gray-200
-          text-lg font-bold font-sans mb-2" htmlFor="combo">
+          text-lg font-bold font-sans mb-1" htmlFor="combo">
           {InputFieldBaseText}
         </label>
         <textarea className="shadow appearance-none
           bg-transparent text-wrap text-xl
           text-center font-medium row-span-full
           font-sans h-auto w-7/12
-          border rounded-xl py-2 px-3
+          border border-gray-300 border-b-4 border-r-4 rounded-xl py-2 px-3
           focus:text-blue-200 text-gray-100
           placeholder:text-gray-600
           leading-tight
           focus:outline-none focus:shadow-2xl
-          focus:shadow-white
+          focus:shadow-gray-600
           "
           id="combo" placeholder={InputFieldPlaceholder}
           value={comboInput}

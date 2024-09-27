@@ -37,13 +37,13 @@ function App() {
 
   return (
     <GameContext.Provider value={{game: chosenGame, char: chosenCharacter, setter: changeGameOrCharacter}}>
-      <div className="mb-12">
+      <div className="mb-7">
         <div className="flex justify-center items-center">
-          <img src={comboukenLogo} className="w-72"/>
+          <img src={comboukenLogo} className="w-52"/>
         </div>
-        <h1 className='font-sans'>Fighting Game Combos</h1>
+        <h2 className='font-sans'>Fighting Game Combos</h2>
       </div>
-      <div className="mb-8">
+      <div className="grid grid-cols-4 mb-1">
         <GameSelector />
         <CharSelector />
       </div>
