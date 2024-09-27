@@ -94,14 +94,19 @@ export const GenericMotions: {[key: string]: [RegExp, number, string?]} = {
 }
 
 // Regular expressions for typical modifiers for fighting game "stances".
-export const GenericStances: {[key: string]: [RegExp, number, string?, number?]} = {
-  standing: [/[Ss]([Tt]\.?|tand(ing)?\.?|\.)|[Nn]((eu)?tr(al)?\.?|\.)/, 200, "St.", 2],
+export const NarrowGenericStances: {[key: string]: [RegExp, number, string?, number?]} = {
   crouching: [/[Cc](rouch(ing)?.?|r\.?|\.)/, 201, "Cr.", 2],
   airborne: [/[Jj]([.]|u?mp(ing)?\.?)/, 202, "J.", 2],
   airborneNeutral: [/([Nn]eutral?\s?)[Jj](ump(ing)?\.?|\.)/, 203, "NJ.", 2],
+  whiff: [/([Ww]hiff?\.?|[Mm]iss?\.)/, 206, "(miss).", 2]
+}
+
+// Regular expressions for typical modifiers for fighting game "stances".
+export const FullGenericStances: {[key: string]: [RegExp, number, string?, number?]} = {
+  ...NarrowGenericStances,
+  standing: [/[Ss]([Tt]\.?|tand(ing)?\.?|\.)|[Nn]((eu)?tr(al)?\.?|\.)/, 200, "St.", 2],
   close: [/[Cc][Ll](ose)?\.?/, 204, "Cl.", 2],
   far: [/[Ff](ar\.?|\.)/, 205, "F.", 2],
-  whiff: [/([Ww]hiff?\.?|[Mm]iss?\.)/, 206, "(miss).", 2]
 }
 
 // Regular expressions for typical numpad-notation movement.

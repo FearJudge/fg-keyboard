@@ -1,8 +1,9 @@
 import { ConstructingRule, NOIMAGESTRING } from "../GameProfiles/ButtonStyling";
+import { GameFormat } from "../GameProfiles/Games";
 import { ComboDisplayProps } from "../Input/ComboDisplayProps";
 import { DrawImageByRule, TintSVGByValue } from "./OutputMapper";
 
-export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number) {
+export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number, game: GameFormat) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
@@ -29,7 +30,7 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number) 
     let carryRules: ConstructingRule[] = [];
     for (let i = 0; i < buttonsToMap.ButtonsToDisplay.length; i++) {
       if (ctx == null) { return; }
-      const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i]);
+      const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i], game);
       if (rules[0].src == NOIMAGESTRING) { carryRules = carryRules.concat(rules); continue; }
 
       const imgWidth: number = (buttonsToMap.ExtraButtonDataToDisplay[i] == "")? 32 : 

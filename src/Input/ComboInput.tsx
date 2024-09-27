@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import InputParser from './InputParser';
 import { ComboDisplayProps } from './ComboDisplayProps';
 import { WidthInput } from './WidthInput';
+import { GameContext } from '../store/GameContext';
 
 type InputProps = {
   setButtons: (newButtons: ComboDisplayProps) => void;
@@ -17,17 +18,18 @@ export function Input({setButtons, setWidth}: InputProps) {
   const previousExtra = useRef([""]);
   const InputFieldBaseText: string = "Combo:";
   const InputFieldPlaceholder: string = "Type Combo Here!";
+  const rctx = useContext(GameContext);
 
   function onModifyComboInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const newComboVal = e.target.value;
     //For testing purposes, can switch between either or.
     // For quick testing with the game variant,
     // use abbreviations like: d u f lk hp or qcf
-    const inputData: { buttons: number[], extra: string[] } = InputParser.ParseComboWithGame(newComboVal);
+    const inputData: { buttons: number[], extra: string[] } = InputParser.ParseComboWithGame(newComboVal, rctx.game);
     const comboProps: ComboDisplayProps = {
       ButtonsToDisplay: inputData.buttons,
       ExtraButtonDataToDisplay: inputData.extra,
-      CleanedInputPerButton: InputParser.GetCleanedInputCommand(inputData.buttons, inputData.extra),
+      CleanedInputPerButton: InputParser.GetCleanedInputCommand(inputData.buttons, inputData.extra, rctx.game),
       GameToUse: "Street Fighter 2",
       Character: "Ryu",
       AdditionalComboInputs: {

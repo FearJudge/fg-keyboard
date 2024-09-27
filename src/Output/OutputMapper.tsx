@@ -1,10 +1,9 @@
 import { Fallback, Labels } from "../GameProfiles/ButtonStyling"
-import { Games } from "../GameProfiles/Games";
+import { GameFormat } from "../GameProfiles/Games";
 
-export function DrawImageByRule(id: number){
-  const g = Games.StreetFighter2;
+export function DrawImageByRule(id: number, game: GameFormat){
   if (id >= 300 && id <= 305) { return Labels[id]; }
-  return g.displayRules[id] ? g.displayRules[id] : [Fallback];
+  return game.displayRules[id] ? game.displayRules[id] : [Fallback];
 }
 
 export function TintSVGByValue(source: HTMLImageElement, tint: string)
