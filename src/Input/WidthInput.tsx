@@ -1,7 +1,13 @@
-export function WidthInput({setWidth}: {setWidth: React.Dispatch<React.SetStateAction<number>>}) {
+import { useContext } from "react";
+import { OutputStyleContext } from "../store/OutputStyleContext";
+
+
+export function WidthInput() {
+  const styleCtx = useContext(OutputStyleContext);
+  
   function onWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
     const newWidth = parseInt(e.target.value);
-    setWidth(newWidth);
+    styleCtx.setter(newWidth);
   }
 
   return (

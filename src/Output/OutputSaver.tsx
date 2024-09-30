@@ -1,7 +1,7 @@
 // Responsible for saving the image to a file that the user can download.
 // Medium/Low Priority
 
-export default function OpenSave(e: React.MouseEvent<HTMLButtonElement>)
+export default function OpenSave()
 {
   const anchor: HTMLAnchorElement = document.createElement("a");
   anchor.href = (document.getElementById("comboArea") as HTMLCanvasElement).toDataURL("image/png").replace("image/png", "");

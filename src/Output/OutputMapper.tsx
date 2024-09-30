@@ -1,9 +1,22 @@
 import { Fallback, Labels } from "../GameProfiles/ButtonStyling"
 import { GameFormat } from "../GameProfiles/Games";
+import { Styles, AddRules, AddRuleForStyling } from "../GameProfiles/OutputStyling";
 
 export function DrawImageByRule(id: number, game: GameFormat){
   if (id >= 300 && id <= 305) { return Labels[id]; }
-  return game.displayRules[id] ? game.displayRules[id] : [Fallback];
+  return game?.displayRules[id] ? game.displayRules[id] : [Fallback];
+}
+
+export function GetCanvasStyleRule(name: string){
+  return Styles[name] ? Styles[name] : Styles["default"];
+}
+
+export function GetCanvasModifiers(modifiers: string[]){
+  const rules: AddRuleForStyling[] = [];
+  for (let i = 0; i < modifiers.length; i++) {
+    if (AddRules[modifiers[i]]) {rules.push(AddRules[modifiers[i]])};
+  }
+  return rules;
 }
 
 export function TintSVGByValue(source: HTMLImageElement, tint: string)

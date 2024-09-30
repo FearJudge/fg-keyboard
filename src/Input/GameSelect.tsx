@@ -16,7 +16,7 @@ function GameSelector() {
       text-sm font-bold mb-1" htmlFor="game">
       {GameSelectorBaseText}
       </label>
-      <button id="game" onClick={() => { setTagExtra(baseShow); }} className="appearance-none bg-zinc-800
+      <button id="game" onClick={() => { setTagExtra((tagExtra == baseHidden)? baseShow : baseHidden); }} className="appearance-none bg-zinc-800
       border-b-4 border-r-2 border-zinc-900 rounded w-11/12 py-3 px-3 text-gray-100
       leading-tight focus:outline-none focus:shadow-outline">
         <div>{rctx.game.displayName}</div>
@@ -29,6 +29,7 @@ function GameSelector() {
     })}
       </div>
     </div>
+    
   );
 }
 

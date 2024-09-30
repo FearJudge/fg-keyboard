@@ -1,18 +1,24 @@
 import { ConstructingRule, NOIMAGESTRING } from "../GameProfiles/ButtonStyling";
-import { GameFormat } from "../GameProfiles/Games";
+import { AddRuleForStyling, StyleRule } from "../GameProfiles/OutputStyling";
 import { ComboDisplayProps } from "../Input/ComboDisplayProps";
-import { DrawImageByRule, TintSVGByValue } from "./OutputMapper";
+import { ReadableGameCtx } from "../store/GameContext";
+import { ReadableOutputCtx } from "../store/OutputStyleContext";
+import { DrawImageByRule, GetCanvasModifiers, GetCanvasStyleRule, TintSVGByValue } from "./OutputMapper";
 
-export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number, game: GameFormat) {
+export function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
   const MARGIN_BETWEEN_Y = 0;
 
-  const canvasWidth = outputWidth;
+  const canvasWidth = outputCtx.width;
   let canvasHeight = 42;
+  let marginX = MARGIN_X;
+  let marginY = MARGIN_Y;
   let posX = MARGIN_X;
   let posY = MARGIN_Y;
+
+  console.log(gameCtx);
 
 
   const c: HTMLCanvasElement | null = document.getElementById("comboArea") as HTMLCanvasElement;
@@ -26,11 +32,44 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number, 
   console.log(buttonsToMap.ButtonsToDisplay);
   console.log(buttonsToMap.ExtraButtonDataToDisplay);
 
+  async function initializeCanvas()
+  {
+    if (ctx == null) { return; }
+    const style: AddRuleForStyling[] = GetCanvasModifiers(outputCtx.additionalFields);
+    for (let j = 0; j < style.length; j++)
+    {
+      const rule: AddRuleForStyling = style[j];
+      if (rule.print) {
+        drawTextOnImage(rule, -1, 0, posY)
+      }
+      if (rule.canvasMarginAdd) { marginX += rule.canvasMarginAdd[0]; marginY += rule.canvasMarginAdd[1]; 
+        posY = marginY;
+        canvasHeight = 32 + marginY + 5;
+        await resizeCanvas(canvasHeight);
+      };
+    }
+    ctx.restore();
+  }
+
+  function setUpCanvas()
+  {
+    if (ctx == null) { return; }
+    const style: StyleRule = GetCanvasStyleRule(outputCtx.bg);
+    if (style.color) {
+      ctx.globalCompositeOperation = "destination-over";
+      ctx.fillStyle = style.color; 
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight); 
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
   async function drawToCanvas() {
+    await initializeCanvas();
     let carryRules: ConstructingRule[] = [];
     for (let i = 0; i < buttonsToMap.ButtonsToDisplay.length; i++) {
       if (ctx == null) { return; }
-      const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i], game);
+      const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i], gameCtx.game);
       if (rules[0].src == NOIMAGESTRING) { carryRules = carryRules.concat(rules); continue; }
 
       const imgWidth: number = (buttonsToMap.ExtraButtonDataToDisplay[i] == "")? 32 : 
@@ -56,11 +95,12 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number, 
       posX = posX + imgWidth + MARGIN_BETWEEN_X;
       carryRules = [];
     }
+    setUpCanvas();
   }
 
   async function makeNewRowIfNeeded(imgWidth: number, imgHeight: number) {
-    if (posX + imgWidth + MARGIN_X > canvasWidth) {
-      posX = MARGIN_X;
+    if (posX + imgWidth + marginX > canvasWidth) {
+      posX = marginX;
       // NOTE: If different image heights will be implemented, use here the height of the
       // latest row instead of imgHeight to update posY and canvasHeight.
       posY = posY + imgHeight + MARGIN_BETWEEN_Y;
@@ -86,13 +126,14 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number, 
     console.log("result for new canvas height: " + result);
   }
 
-  async function drawTextOnImage(rule: ConstructingRule, index: number, curX: number, curY: number, text?: string) {
+  async function drawTextOnImage(rule: ConstructingRule | AddRuleForStyling, index: number, curX: number, curY: number, text?: string) {
     await new Promise<number>((resolve) => {
       if (ctx == null) { resolve(index); return; }
+      const t = rule.print? rule.print.replace(/\{GAME\}/, gameCtx.game.displayName).replace(/\{CHAR\}/, gameCtx.char) : text?? "-";
       ctx.font = rule.printoverride?? "16px Dosis";
       ctx.fillStyle = rule.color?? "#ffffff";
       ctx.fillText(
-        rule.print?? text?? "-",
+        t,
         rule.printoffset? rule.printoffset[0] + curX : curX,
         rule.printoffset? rule.printoffset[1] + curY : curY
       )
@@ -121,7 +162,7 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, outputWidth: number, 
     });
   }
     
-  return canvasHeight;
+  return canvasHeight + marginY + 5;
 }
 
 function determineWidth(rules: ConstructingRule[], length: number, defWidth: number): number {

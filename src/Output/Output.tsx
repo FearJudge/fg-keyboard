@@ -4,14 +4,11 @@ import ComboCanvas from './ComboCanvas';
 // Displays the output gotten by the outputmapper.
 // Potentially also displays other input like additional data fields.
 // (Character, Combo Damage, Additional Notes etc.)
-export default function Output({buttonsToMap, outputWidth} : {buttonsToMap: ComboDisplayProps, outputWidth: number}) {
+export default function Output({buttonsToMap} : {buttonsToMap: ComboDisplayProps}) {
   return (
-    <div className="self-center py-1 h-24">
-      <>
-        <ComboCanvas buttonsToMap={buttonsToMap} outputWidth={outputWidth} />
-      </>
+    <div className="self-center py-1">
+      <ComboCanvas buttonsToMap={buttonsToMap} />
       <p> {buttonsToMap.CleanedInputPerButton.join('')} </p>
-      <p>Canvas width: {outputWidth}</p>
     </div>
   );
 }

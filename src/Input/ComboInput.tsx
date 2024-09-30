@@ -1,18 +1,16 @@
 import { useState, useRef, useContext } from 'react';
 import InputParser from './InputParser';
 import { ComboDisplayProps } from './ComboDisplayProps';
-import { WidthInput } from './WidthInput';
 import { GameContext } from '../store/GameContext';
 
 type InputProps = {
   setButtons: (newButtons: ComboDisplayProps) => void;
-  setWidth: React.Dispatch<React.SetStateAction<number>>;
 };
 
 // Takes user input and passes it to be parsed.
 // Potentially reactively expand input field to accomodate larger
 // inputs.
-export function Input({setButtons, setWidth}: InputProps) {
+export function Input({setButtons}: InputProps) {
   const [comboInput, setComboInput] = useState('');
   const previousOutput = useRef([0]);
   const previousExtra = useRef([""]);
@@ -56,7 +54,6 @@ export function Input({setButtons, setWidth}: InputProps) {
 
   return (
     <>
-      <WidthInput setWidth={setWidth} />
       <div className="self-center py-2" >
         <label className="block text-gray-200
           text-lg font-bold font-sans mb-1" htmlFor="combo">

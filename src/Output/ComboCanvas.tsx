@@ -1,17 +1,21 @@
 import { useContext } from 'react';
 import { ComboDisplayProps } from '../Input/ComboDisplayProps';
 import { drawCombo } from './drawCombo';
-import ComboSaver from './OutputSaver';
-import { GameContext } from '../store/GameContext';
+import { GameContext, ReadableGameCtx } from '../store/GameContext';
+import { OutputStyleContext, ReadableOutputCtx } from '../store/OutputStyleContext';
 
-export default function ComboCanvas({ buttonsToMap, outputWidth }: {buttonsToMap: ComboDisplayProps, outputWidth: number}) {
-  const rctx = useContext(GameContext);
-  const canvasHeight = drawCombo(buttonsToMap, outputWidth, rctx.game);
+export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDisplayProps}) {
+  const gameCtx = useContext(GameContext);
+  const styleCtx = useContext(OutputStyleContext);
+  const canvasHeight = drawCombo(buttonsToMap, gameCtx as ReadableGameCtx, styleCtx as ReadableOutputCtx);
 
-  return <div id="outputDisplay" className="grid grid-cols-7">
-    <canvas id="comboArea" className="col-start-4 grid-span-1 self-baseline place-self-center bg-cyan-900 rounded-md"
-      width={outputWidth} height={canvasHeight}>
-    </canvas>
-    <button onClick={ComboSaver} className="col-start-6 grid-span-1 place-self-end mx-12 w-3/5 font-sans">Save Combo</button>
+  return (
+  <div id="outputGrid">
+    <div id="outputDisplay" className="flex overflow-x-auto mx-4">
+      <canvas id="comboArea" className="flex bg-cyan-900 rounded-md mx-auto"
+        width={styleCtx.width} height={canvasHeight}>
+      </canvas>
+      </div>
   </div>
+  )
 }

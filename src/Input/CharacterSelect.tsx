@@ -1,9 +1,6 @@
 import { useContext, useState } from "react";
 import { GameContext } from "../store/GameContext";
 
-// Class for the dropdown to choose different characters, low priority.
-const SelectedChar : string = "Ken";
-
 function CharSelector() {
     
   const rctx = useContext(GameContext);
@@ -18,7 +15,7 @@ function CharSelector() {
           text-sm font-bold mb-1" htmlFor="char">
           {CharSelectorBaseText}
         </label>
-        <button id="game" onClick={() => { setTagExtra(baseShow); }} className="appearance-none bg-zinc-800
+        <button id="game" onClick={() => { setTagExtra((tagExtra == baseHidden)? baseShow : baseHidden); }} className="appearance-none bg-zinc-800
           border-b-4 border-r-2 border-zinc-900 rounded w-11/12 py-3 px-3 text-gray-100
           leading-tight focus:outline-none focus:shadow-outline">
       <div>{rctx.char}</div>
@@ -30,7 +27,8 @@ function CharSelector() {
       </button> 
     })}
     </div>
-  </div>  
+  </div>
+  
   );
 }
 
