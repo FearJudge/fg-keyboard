@@ -5,32 +5,19 @@ import { ReadableGameCtx } from "../store/GameContext";
 import { ReadableOutputCtx } from "../store/OutputStyleContext";
 import { DrawImageByRule, GetCanvasModifiers, GetCanvasStyleRule, TintSVGByValue } from "./OutputMapper";
 
-export function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx) {
+export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
   const MARGIN_BETWEEN_Y = 0;
 
   const canvasWidth = outputCtx.width;
+  console.log("width context :" + outputCtx.width);
   let canvasHeight = 42;
   let marginX = MARGIN_X;
   let marginY = MARGIN_Y;
   let posX = MARGIN_X;
   let posY = MARGIN_Y;
-
-  console.log(gameCtx);
-
-
-  const c: HTMLCanvasElement | null = document.getElementById("comboArea") as HTMLCanvasElement;
-  if (c !== null) {
-    c.height = canvasHeight;
-  }
-  const ctx = c?.getContext("2d");
-  ctx?.reset();
-
-  drawToCanvas();
-  console.log(buttonsToMap.ButtonsToDisplay);
-  console.log(buttonsToMap.ExtraButtonDataToDisplay);
 
   async function initializeCanvas()
   {
@@ -42,9 +29,9 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGame
       if (rule.print) {
         drawTextOnImage(rule, -1, 0, posY)
       }
-      if (rule.canvasMarginAdd) { marginX += rule.canvasMarginAdd[0]; marginY += rule.canvasMarginAdd[1]; 
+      if (rule.canvasMarginAdd) { marginX += rule.canvasMarginAdd[0]; marginY += rule.canvasMarginAdd[1];
         posY = marginY;
-        canvasHeight = 32 + marginY + 5;
+        canvasHeight = 32 + marginY + MARGIN_Y;
         await resizeCanvas(canvasHeight);
       };
     }
@@ -57,8 +44,8 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGame
     const style: StyleRule = GetCanvasStyleRule(outputCtx.bg);
     if (style.color) {
       ctx.globalCompositeOperation = "destination-over";
-      ctx.fillStyle = style.color; 
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight); 
+      ctx.fillStyle = style.color;
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
       ctx.restore();
     }
     ctx.restore();
@@ -72,7 +59,7 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGame
       const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i], gameCtx.game);
       if (rules[0].src == NOIMAGESTRING) { carryRules = carryRules.concat(rules); continue; }
 
-      const imgWidth: number = (buttonsToMap.ExtraButtonDataToDisplay[i] == "")? 32 : 
+      const imgWidth: number = (buttonsToMap.ExtraButtonDataToDisplay[i] == "")? 32 :
       determineWidth(rules, buttonsToMap.ExtraButtonDataToDisplay[i].length, 32);
       const imgHeight: number = 32;
       await makeNewRowIfNeeded(imgWidth, imgHeight);
@@ -83,7 +70,7 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGame
       for (let j = 0; j < rules.concat(carryRules).length; j++) {
         const rule: ConstructingRule = rules.concat(carryRules)[j];
         if (rule.src == NOIMAGESTRING) {
-          const userText = (buttonsToMap.ExtraButtonDataToDisplay.length > i)? 
+          const userText = (buttonsToMap.ExtraButtonDataToDisplay.length > i)?
           buttonsToMap.ExtraButtonDataToDisplay[i] : undefined;
           drawTextOnImage(rule, j, currentPosX, currentPosY, userText);
         } else {
@@ -161,8 +148,20 @@ export function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGame
       image.src = rule.src;
     });
   }
-    
-  return canvasHeight + marginY + 5;
+
+  console.log(gameCtx);
+
+  const c: HTMLCanvasElement | null = document.getElementById("comboArea") as HTMLCanvasElement;
+  if (c !== null) {
+    c.height = canvasHeight;
+  }
+  const ctx = c?.getContext("2d");
+  ctx?.reset();
+
+  await drawToCanvas();
+  console.log(buttonsToMap.ButtonsToDisplay);
+  console.log(buttonsToMap.ExtraButtonDataToDisplay);
+  return canvasHeight; // + marginY + 5;
 }
 
 function determineWidth(rules: ConstructingRule[], length: number, defWidth: number): number {
@@ -170,8 +169,8 @@ function determineWidth(rules: ConstructingRule[], length: number, defWidth: num
   for (let i = 0; i < rules.length; i++)
   {
     if (rules[i].overrideWidth != undefined) {
-      const newWidth = (typeof(rules[i].overrideWidth) == "number")? 
-      rules[i].overrideWidth as number : (rules[i].overrideWidth as { 
+      const newWidth = (typeof(rules[i].overrideWidth) == "number")?
+      rules[i].overrideWidth as number : (rules[i].overrideWidth as {
         perCharacter: number })["perCharacter"] * (length);
        w += newWidth;
     }
@@ -179,4 +178,3 @@ function determineWidth(rules: ConstructingRule[], length: number, defWidth: num
   if (w == 0) { return defWidth; }
   return w;
 }
-
