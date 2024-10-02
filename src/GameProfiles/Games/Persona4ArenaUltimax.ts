@@ -17,10 +17,14 @@ export const Persona4AU: GameFormat =
     ...NarrowGenericStances,
     ...GenericMotions,
     ...numPadMovement,
+    aoa: [/[aA](ll\s?)?[oO](ut\s?)?[aA](ttack)?/, 101, "A+B", 0],
+    fa: [/[fF](urious[\s-]?)?[aA](ttack?)/, 100, "B+D", 0],
+    omb: [/[oO](ne[\s-]?)?[mM](ore[\s-]?)?[bB](urst)?/, 102, "A+C+D"],
     a: [/[aA]/, 10, "A", 1],
     b: [/[bB]/, 11, "B", 1],
     c: [/[cC]/, 12, "C", 1],
     d: [/[dD]/, 13, "D", 1],
+    j: [/[jJ]/, 202, "J.", 2]
   },
   displayRules: {
     ...GenericDetails,
@@ -35,6 +39,12 @@ export const Persona4AU: GameFormat =
       { src: NOIMAGESTRING, print: "C", "printoffset": [8, 27], "printoverride": "32px Dosis" }],
     13: [{ src: OutputImages.SingleButtonBase, color: "#FF2323" },
       { src: NOIMAGESTRING, print: "D", "printoffset": [8, 27], "printoverride": "32px Dosis" }],
+    100: [{ src: OutputImages.Explosion, color: "#8C4545" },
+      { src: NOIMAGESTRING, print: "FA", "printoffset": [3, 24], "printoverride": "26px Dosis" }],
+    101: [{ src: OutputImages.Explosion, color: "#45458C" },
+      { src: NOIMAGESTRING, print: "AOA", "printoffset": [2, 20], "printoverride": "20px Dosis" }],
+    102: [{ src: OutputImages.Explosion, color: "#8C4545" },
+      { src: NOIMAGESTRING, print: "OMB", "printoffset": [2, 20], "printoverride": "20px Dosis" }],
   }
 }
 

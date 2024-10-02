@@ -11,7 +11,8 @@ import { GameFormat } from './GameProfiles/Games';
 import StreetFighter2 from './GameProfiles/Games/StreetFighter2';
 import { GameContext } from './store/GameContext';
 import { OutputStyleContext } from './store/OutputStyleContext';
-import StyleInput from './Input/StyleInput';
+import StyleInput from './Input/StyleInputSidebar';
+import { SaveButton } from './Input/SaveButton';
 
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
         setter: changeStyle, addSetter: setFields}}>
         <StyleInput/>
         <ComboInput setButtons={setButtons}/>
+        <SaveButton/>
         <ComboOutput buttonsToMap={buttonSequence} />
       </OutputStyleContext.Provider>
     </GameContext.Provider>

@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { OutputStyleContext } from "../store/OutputStyleContext";
+import FGKButton from "./ConstantStyle/FGKButton";
 
 
 export function AddDataInput() {
@@ -29,18 +30,8 @@ export function AddDataInput() {
         text-base font-bold font-sans mb-5" htmlFor="styleInput">Select fields to include in output:
       </label>
       <div className="my-4" id="widthInput">
-        <div className="inline">
-          <input className="hidden peer" type="checkbox" id="charName" value={"character"} name="style" defaultChecked={styleOn("character")}/>
-          <label className="py-3 px-3 mr-2 border-2 border-b-4 border-r-4 
-          border-cyan-900 rounded-md peer-checked:bg-cyan-900 peer-checked:border-cyan-600 
-          hover:bg-neutral-600 hover:border-gray-400" htmlFor="charName">Character</label>
-        </div>
-        <div className="inline">
-          <input className="hidden peer" type="checkbox" id="gameName" value={"game"} name="style" defaultChecked={styleOn("game")}/>
-          <label className="py-3 px-3 mr-2 border-2 border-b-4 border-r-4 
-          border-cyan-900 rounded-md peer-checked:bg-cyan-900 peer-checked:border-cyan-600 
-          hover:bg-neutral-600 hover:border-gray-400" htmlFor="gameName">Game</label>
-        </div>
+        <FGKButton id="charName" type="checkbox" name="addData" value="character" str="Character" defaultChecked={styleOn("character")}></FGKButton>
+        <FGKButton id="gameName" type="checkbox" name="addData" value="game" str="Game" defaultChecked={styleOn("game")}></FGKButton>
       </div>
     </div>
   );

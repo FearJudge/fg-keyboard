@@ -17,6 +17,7 @@ export type GameFormat = {
   //   2 for modifiers.
   buttonRegexes: { [key: string]: [RegExp, number, string?, number?] };
   displayRules: { [key: number]: ConstructingRule[] };
+  replacements?: { [key: number]: number[] }
 }
 
 export const GameListing = [
