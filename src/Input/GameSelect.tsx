@@ -3,7 +3,7 @@ import { GameContext } from "../store/GameContext";
 import { GameListing } from "../GameProfiles/Games";
 
 function GameSelector() {
-  
+
   const rctx = useContext(GameContext);
   const GameSelectorBaseText: string = "Select game:";
   const baseHidden: string = "hidden";
@@ -22,14 +22,14 @@ function GameSelector() {
         <div>{rctx.game.displayName}</div>
       </button>
       <div> { GameListing.map(function(object){
-        return <button onClick={() => {rctx.setter(object); setTagExtra(baseHidden);  }} className={"appearance-none bg-zinc-800 " +
+        return <button key={object.displayName} onClick={() => {rctx.setter(object); setTagExtra(baseHidden);  }} className={"appearance-none bg-zinc-800 " +
         "border-b-4 border-r-2 border-zinc-900 rounded w-11/12 py-2 px-3 text-gray-100 " +
         "leading-tight focus:outline-none focus:shadow-outline " + tagExtra}> { object.displayName }
         </button>;
     })}
       </div>
     </div>
-    
+
   );
 }
 
