@@ -17,9 +17,9 @@ export function WidthInput() {
           text-base font-bold font-sans mb-5" htmlFor="widthInput">Select the width of output picture:
         </label>
         <div className="my-4" id="widthInput">
-          <FGKButton id="sm" name="width" type="radio" value={266} str="Small" defaultChecked={true}></FGKButton>
-          <FGKButton id="md" name="width" type="radio" value={586} str="Medium"></FGKButton>
-          <FGKButton id="lg" name="width" type="radio" value={906} str="Large"></FGKButton>
+          <FGKButton id="sm" name="width" type="radio" value={266} str="Small" defaultChecked={styleCtx.width == 266}></FGKButton>
+          <FGKButton id="md" name="width" type="radio" value={586} str="Medium" defaultChecked={styleCtx.width == 586}></FGKButton>
+          <FGKButton id="lg" name="width" type="radio" value={906} str="Large" defaultChecked={styleCtx.width == 906}></FGKButton>
         </div>
       </div>
   );

@@ -17,8 +17,8 @@ export function ThemeStyleInput() {
         text-base font-bold font-sans mb-5" htmlFor="styleInput">Select the background:
       </label>
       <div className="my-4" id="styleInput">
-      <FGKButton id="style0" type="radio" name="style" value="default" str="See-Through" defaultChecked={true}></FGKButton>
-      <FGKButton id="style1" type="radio" name="style" value="white" str="White"></FGKButton>
+      <FGKButton id="style0" type="radio" name="style" value="default" str="See-Through" defaultChecked={styleCtx.bg == "default"}></FGKButton>
+      <FGKButton id="style1" type="radio" name="style" value="white" str="White" defaultChecked={styleCtx.bg == "white"}></FGKButton>
       </div>
     </div>
   );
