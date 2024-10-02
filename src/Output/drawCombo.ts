@@ -5,14 +5,14 @@ import { ReadableGameCtx } from "../store/GameContext";
 import { ReadableOutputCtx } from "../store/OutputStyleContext";
 import { DrawImageByRule, GetCanvasModifiers, GetCanvasStyleRule, TintSVGByValue } from "./OutputMapper";
 
-export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx) {
+export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx, ref: {abort: AbortSignal}) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
   const MARGIN_BETWEEN_Y = 0;
 
   const canvasWidth = outputCtx.width;
-  console.log("width context :" + outputCtx.width);
+
   let canvasHeight = 42;
   let marginX = MARGIN_X;
   let marginY = MARGIN_Y;
@@ -55,7 +55,7 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
     await initializeCanvas();
     let carryRules: ConstructingRule[] = [];
     for (let i = 0; i < buttonsToMap.ButtonsToDisplay.length; i++) {
-      if (ctx == null) { return; }
+      if (ctx == null || ref.abort.aborted) { return; }
       const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i], gameCtx.game);
       if (rules[0].src == NOIMAGESTRING) { carryRules = carryRules.concat(rules); continue; }
 
@@ -69,6 +69,7 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
 
       for (let j = 0; j < rules.concat(carryRules).length; j++) {
         const rule: ConstructingRule = rules.concat(carryRules)[j];
+        if (ref.abort.aborted) { return; }
         if (rule.src == NOIMAGESTRING) {
           const userText = (buttonsToMap.ExtraButtonDataToDisplay.length > i)?
           buttonsToMap.ExtraButtonDataToDisplay[i] : undefined;
@@ -101,21 +102,21 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
     const oldCanvas = c.toDataURL();
     const img = new Image();
 
-    const result = await new Promise<number>((resolve) => {
+    const result = await new Promise<number>((resolve, reject) => {
       img.onload = () => {
+        if (ref.abort.aborted) { reject(); return; }
         c.height = height;
         ctx.drawImage(img, 0, 0);
         resolve(height);
       };
       img.src = oldCanvas;
     });
-
-    console.log("result for new canvas height: " + result);
   }
 
   async function drawTextOnImage(rule: ConstructingRule | AddRuleForStyling, index: number, curX: number, curY: number, text?: string) {
-    await new Promise<number>((resolve) => {
+    await new Promise<number>((resolve, reject) => {
       if (ctx == null) { resolve(index); return; }
+      if (ref.abort.aborted) { reject(); return; }
       const t = rule.print? rule.print.replace(/\{GAME\}/, gameCtx.game.displayName).replace(/\{CHAR\}/, gameCtx.char) : text?? "-";
       ctx.font = rule.printoverride?? "16px Dosis";
       ctx.fillStyle = rule.color?? "#ffffff";
@@ -129,12 +130,12 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
   }
 
   async function drawImageOnThePosition(image: HTMLImageElement, rule: ConstructingRule, index: number, curX: number, curY: number, width: number) {
-    await new Promise<number>((resolve) => {
+    await new Promise<number>((resolve, reject) => {
       image.onload = () => {
         if (ctx !== null) {
+          if (ref.abort.aborted) { reject(); return; }
           if (rule.printoverride == "END") {
             curX += width - 32;
-            console.log(curX);
           }
           if (rule.color != undefined) {
             const recanv: CanvasImageSource = TintSVGByValue(image, rule.color as string) as OffscreenCanvas;
@@ -149,8 +150,6 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
     });
   }
 
-  console.log(gameCtx);
-
   const c: HTMLCanvasElement | null = document.getElementById("comboArea") as HTMLCanvasElement;
   if (c !== null) {
     c.height = canvasHeight;
@@ -159,8 +158,6 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
   ctx?.reset();
 
   await drawToCanvas();
-  console.log(buttonsToMap.ButtonsToDisplay);
-  console.log(buttonsToMap.ExtraButtonDataToDisplay);
   return canvasHeight; // + marginY + 5;
 }
 

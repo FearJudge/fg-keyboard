@@ -14,15 +14,17 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDispla
   useLayoutEffect(() => {
     async function runComboEffect(){
       setIsLoading(true);
-      canvasRef.current = await drawCombo(buttonsToMap, gameCtx as ReadableGameCtx, styleCtx as ReadableOutputCtx);
-      setTimeout(()=> {setIsLoading(false);}, 1000);
-      console.log("New height " + canvasRef.current);
+      const h = await drawCombo(
+        buttonsToMap, gameCtx as ReadableGameCtx, styleCtx as ReadableOutputCtx, 
+        { abort: b.signal }).catch(e => {if (e == undefined) { return; } console.log(e);});
+        if (b.signal.aborted) { return; }
+      if (h != undefined) { canvasRef.current = h; }
+      setTimeout(() => { setIsLoading(false); }, 50);
     };
+    const b: AbortController = new AbortController();
     runComboEffect();
-
+    return () => { b.abort("REFRESH!"); };
     }, [buttonsToMap, gameCtx, styleCtx]);
-
-  console.log("canvasHeight in ComboCanvas: " + canvasRef.current);
 
  return(
   <div id="outputGrid">
@@ -32,7 +34,7 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDispla
       </div> : null
       }
       <canvas id="comboArea" className="flex bg-cyan-900 rounded mx-auto"
-        width={styleCtx.width} height={canvasRef.current}>
+        width={styleCtx.width} height={42}>
       </canvas>
       </div>
   </div>
