@@ -45,7 +45,6 @@ export function Input({setButtons}: InputProps) {
       )))
       {
         setButtons(comboProps);
-        console.log("Updating Output! || " + inputData.buttons.length + " VS: " + previousOutput.current.length);
         previousOutput.current = inputData.buttons;
         previousExtra.current = inputData.extra;
       }

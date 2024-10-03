@@ -65,7 +65,7 @@ class InputParser
           if (button >= RANGEOFMODIFIERS[0] && button <= RANGEOFMODIFIERS[1]) {
             ExtraArray.push(Object.entries(FullGenericStances).find(p => p[1][1] == button)?.[1][2] as string);
           } else if ( button >= RANGEOFLABELS[0] && button <= RANGEOFLABELS[1] ) {
-            ExtraArray.push(input.trim().replace(/[([)\]]*/g, ""));
+            ExtraArray.push(input.trim().replace(/[([)\]]*/g, "").replace("to:", "").replace("min:", ""));
           } else {
             ExtraArray.push(modifier?? "");
           }

@@ -24,3 +24,8 @@ export {default as Explosion} from '../assets/Input_SVGs/Explosion.svg';
 export {default as PlusSmall} from '../assets/Input_SVGs/PlusSmall.svg';
 export {default as PlusLarge} from '../assets/Input_SVGs/PlusLarge.svg';
 export {default as Card} from '../assets/Input_SVGs/Card.svg';
+export {default as LabelStart} from '../assets/Input_SVGs/LabelStartL.svg';
+export {default as LabelEnd} from '../assets/Input_SVGs/LabelEndR.svg';
+export {default as ArrowLabelStart} from '../assets/Input_SVGs/ArrLabelStartL.svg';
+export {default as ArrowLabelEnd} from '../assets/Input_SVGs/ArrLabelEndR.svg';
+export {default as LabelMid} from '../assets/Input_SVGs/LabelStretch.svg';

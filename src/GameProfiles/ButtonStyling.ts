@@ -5,11 +5,13 @@ export const NOIMAGESTRING: string = "No-Printable-Image";
 
 export type ConstructingRule = {
   src: string;
+  srcoffset?: [number, number];
   color?: string;
   overrideWidth?: number | { perCharacter: number };
   printoffset?: [number, number];
   printoverride?: string;
   print?: string;
+  additionaCommand?: string;
 }
 
 export const Fallback: ConstructingRule = {
@@ -115,48 +117,63 @@ export const GenericPositionModifiers: { [key: number]: ConstructingRule[] } = {
 
 export const Labels: { [key: number]: ConstructingRule[] } = {
   300: [{
-    src: Images.BracketOpen,
+    src: Images.LabelStart,
+    color: "{0}",
     overrideWidth: 24
   },
   {
-    src: NOIMAGESTRING,
-    printoffset: [24, 23],
+    src: Images.LabelMid,
+    srcoffset: [24, 0],
+    additionaCommand: "STRETCH[-48]",
+    color: "{0}",
+    print: "@UI@",
+    printoffset: [20, 23],
     printoverride: "22px Monospace",
     overrideWidth: { perCharacter: 12 }
   },
   {
-    src: Images.BracketClose,
-    printoverride: "END",
+    src: Images.LabelEnd,
+    additionaCommand: "END",
+    color: "{0}",
     overrideWidth: 24
   }],
   301: [{
-    src: Images.BracketOpen,
+    src: Images.ArrowLabelStart,
     overrideWidth: 24
   },
   {
-    src: NOIMAGESTRING,
-    printoffset: [24, 23],
-    printoverride: "16px Monospace",
-    overrideWidth: { perCharacter: 9 }
+    src: Images.LabelMid,
+    srcoffset: [24, 0],
+    additionaCommand: "STRETCH[-48]",
+    print: "@UI@",
+    printoffset: [20, 23],
+    printoverride: "11px Monospace",
+    overrideWidth: { perCharacter: 6 }
   },
   {
-    src: Images.BracketClose,
-    printoverride: "END",
+    src: Images.ArrowLabelEnd,
+    additionaCommand: "END",
     overrideWidth: 24
   }],
   302: [{
-    src: Images.BracketOpen,
+    src: Images.LabelStart,
+    color: "{0}",
     overrideWidth: 24
   },
   {
-    src: NOIMAGESTRING,
-    printoffset: [24, 23],
+    src: Images.LabelMid,
+    srcoffset: [24, 0],
+    additionaCommand: "STRETCH[-48]",
+    color: "{0}",
+    print: "@UI@",
+    printoffset: [20, 23],
     printoverride: "22px Monospace",
     overrideWidth: { perCharacter: 12 }
   },
   {
-    src: Images.BracketClose,
-    printoverride: "END",
+    src: Images.ArrowLabelEnd,
+    additionaCommand: "END",
+    color: "{0}",
     overrideWidth: 24
   }],
   303: [{
@@ -165,13 +182,14 @@ export const Labels: { [key: number]: ConstructingRule[] } = {
   },
   {
     src: NOIMAGESTRING,
-    printoffset: [24, 23],
-    printoverride: "22px Monospace",
-    overrideWidth: { perCharacter: 12 }
+    print: "@UI@",
+    printoffset: [25, 23],
+    printoverride: "16px Monospace",
+    overrideWidth: { perCharacter: 9 }
   },
   {
     src: Images.BracketClose,
-    printoverride: "END",
+    additionaCommand: "END",
     overrideWidth: 24
   }],
 };

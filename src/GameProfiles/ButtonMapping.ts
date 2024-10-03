@@ -62,10 +62,10 @@ export const GenericMovement: {[key: string]: [RegExp, number, string?]} = {
 
 // Regular Expressions for user labels.
 export const UserLabels: {[key: string]: [RegExp, number, string?]} = {
-  userInput: [/\[(?!min:).*?\]/, 300],
-  userInputLabeled: [/\((?!to:).*?\)/, 301],
+  userInput: [/\((?!(min:|to:)).*?\)/, 300],
+  userInputLabeled: [/\((?!to:)(?=min:).*?\)/, 301],
   userInputTransition: [/\((?=to:).*?\)/, 302],
-  userInputSmall: [/\[(?=min:).*?\]/, 303]
+  userInputBrackets: [/\[.*?\]/, 303]
 }
 
 // A set of replacements for motions.

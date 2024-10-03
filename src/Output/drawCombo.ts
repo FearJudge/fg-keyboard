@@ -3,7 +3,7 @@ import { AddRuleForStyling, StyleRule } from "../GameProfiles/OutputStyling";
 import { ComboDisplayProps } from "../Input/ComboDisplayProps";
 import { ReadableGameCtx } from "../store/GameContext";
 import { ReadableOutputCtx } from "../store/OutputStyleContext";
-import { DrawImageByRule, GetCanvasModifiers, GetCanvasStyleRule, TintSVGByValue } from "./OutputMapper";
+import { DrawImageByRule, FinalizeLayoutAndDraw, GetCanvasModifiers, GetCanvasStyleRule, GetTrueWidth, TintSVGByValue } from "./OutputMapper";
 
 export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx, ref: {abort: AbortSignal}) {
   const MARGIN_X = 5;
@@ -70,13 +70,14 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
       for (let j = 0; j < rules.concat(carryRules).length; j++) {
         const rule: ConstructingRule = rules.concat(carryRules)[j];
         if (ref.abort.aborted) { return; }
-        if (rule.src == NOIMAGESTRING) {
-          const userText = (buttonsToMap.ExtraButtonDataToDisplay.length > i)?
+        const userText = (buttonsToMap.ExtraButtonDataToDisplay.length > i)?
           buttonsToMap.ExtraButtonDataToDisplay[i] : undefined;
-          drawTextOnImage(rule, j, currentPosX, currentPosY, userText);
-        } else {
+        if (rule.src !== NOIMAGESTRING ) {
           const image = new Image(imgWidth, imgHeight);
-          await drawImageOnThePosition(image, rule, j, currentPosX, currentPosY, imgWidth);
+          await drawImageOnThePosition(image, rule, j, currentPosX, currentPosY, imgWidth, imgHeight, (userText !== "")? userText : undefined);
+        }
+        if (rule.print != undefined) {
+          await drawTextOnImage(rule, j, currentPosX, currentPosY, (userText !== "")? userText : undefined);
         }
       }
 
@@ -112,14 +113,14 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
       img.src = oldCanvas;
     });
   }
-
+ 
   async function drawTextOnImage(rule: ConstructingRule | AddRuleForStyling, index: number, curX: number, curY: number, text?: string) {
     await new Promise<number>((resolve, reject) => {
       if (ctx == null) { resolve(index); return; }
       if (ref.abort.aborted) { reject(); return; }
-      const t = rule.print? rule.print.replace(/\{GAME\}/, gameCtx.game.displayName).replace(/\{CHAR\}/, gameCtx.char) : text?? "-";
+      const t = text?? (rule.print ? rule.print.replace(/\{GAME\}/, gameCtx.game.displayName).replace(/\{CHAR\}/, gameCtx.char).replace("@UI@", "") : "-");
       ctx.font = rule.printoverride?? "16px Dosis";
-      ctx.fillStyle = rule.color?? "#ffffff";
+      ctx.fillStyle = rule.color? (rule.color.startsWith("#") ? rule.color : "#ffffff") : "#ffffff";
       ctx.fillText(
         t,
         rule.printoffset? rule.printoffset[0] + curX : curX,
@@ -129,20 +130,28 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
     });
   }
 
-  async function drawImageOnThePosition(image: HTMLImageElement, rule: ConstructingRule, index: number, curX: number, curY: number, width: number) {
+  async function drawImageOnThePosition(image: HTMLImageElement, rule: ConstructingRule, index: number, curX: number, curY: number, width: number, height: number, text?: string) {
     await new Promise<number>((resolve, reject) => {
       image.onload = () => {
         if (ctx !== null) {
           if (ref.abort.aborted) { reject(); return; }
-          if (rule.printoverride == "END") {
+          if (rule.overrideWidth && 
+            typeof(rule.overrideWidth) !== "number" && 
+            (rule.overrideWidth as {perCharacter: number})["perCharacter"] > 0 
+            && text && text?.length == 0)
+          { resolve(index); return; }
+          if (rule.additionaCommand == "END") {
             curX += width - 32;
+            ctx.globalCompositeOperation = "destination-over";
           }
-          if (rule.color != undefined) {
-            const recanv: CanvasImageSource = TintSVGByValue(image, rule.color as string) as OffscreenCanvas;
-            ctx.drawImage(recanv, curX, curY);
+          if (rule.color !== undefined) {
+            const recanv: CanvasImageSource = TintSVGByValue(image, rule.color as string, GetTrueWidth(rule, text? text.length : 1)?? width, height) as OffscreenCanvas;
+            FinalizeLayoutAndDraw(recanv, rule, ctx, width, height, curX, curY);
           } else {
-            ctx.drawImage(image, curX, curY);
+            FinalizeLayoutAndDraw(image, rule, ctx, width, height, curX, curY);
           }
+          ctx.globalCompositeOperation = "source-over";
+          ctx.restore();
           resolve(index);
         }
       };
@@ -166,10 +175,8 @@ function determineWidth(rules: ConstructingRule[], length: number, defWidth: num
   for (let i = 0; i < rules.length; i++)
   {
     if (rules[i].overrideWidth != undefined) {
-      const newWidth = (typeof(rules[i].overrideWidth) == "number")?
-      rules[i].overrideWidth as number : (rules[i].overrideWidth as {
-        perCharacter: number })["perCharacter"] * (length);
-       w += newWidth;
+      const newWidth = GetTrueWidth(rules[i], length);
+      w += newWidth?? 0;
     }
   }
   if (w == 0) { return defWidth; }
