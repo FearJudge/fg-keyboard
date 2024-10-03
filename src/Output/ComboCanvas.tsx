@@ -27,8 +27,8 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDispla
     }, [buttonsToMap, gameCtx, styleCtx]);
 
  return(
-  <div id="outputGrid">
-    <div id="outputDisplay" className={`static flex overflow-x-auto mx-auto justify-center items-center`}>
+  <div id="outputGrid" className="flex overflow-x-auto">
+    <div id="outputDisplay" className={`static flex mx-auto justify-center items-center`}>
       {isLoading ? <div className={`absolute w-${styleCtx.width} h-${canvasRef.current} bg-cyan-900 text-lg rounded`}>
         <p className="top-0 inset-x-0">Loading...</p>
       </div> : null
