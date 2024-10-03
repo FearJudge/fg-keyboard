@@ -5,7 +5,7 @@ import { ReadableGameCtx } from "../store/GameContext";
 import { ReadableOutputCtx } from "../store/OutputStyleContext";
 import { DrawImageByRule, FinalizeLayoutAndDraw, GetCanvasModifiers, GetCanvasStyleRule, GetTrueWidth, TintSVGByValue } from "./OutputMapper";
 
-export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx, ref: {abort: AbortSignal}) {
+export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx, h: number, ref: {abort: AbortSignal}) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
@@ -13,11 +13,14 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
 
   const canvasWidth = outputCtx.width;
 
-  let canvasHeight = 42;
+  const canvasHeight = h;
+  let canvasCurrent = 42;
   let marginX = MARGIN_X;
   let marginY = MARGIN_Y;
   let posX = MARGIN_X;
   let posY = MARGIN_Y;
+
+  console.log(h);
 
   async function initializeCanvas()
   {
@@ -31,16 +34,19 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
       }
       if (rule.canvasMarginAdd) { marginX += rule.canvasMarginAdd[0]; marginY += rule.canvasMarginAdd[1];
         posY = marginY;
-        canvasHeight = 32 + marginY + MARGIN_Y;
+        canvasCurrent = 32 + marginY + MARGIN_Y;
         await resizeCanvas(canvasHeight);
       };
     }
     ctx.restore();
   }
 
-  function setUpCanvas()
+  async function setUpCanvas()
   {
     if (ctx == null) { return; }
+    if (canvasHeight > canvasCurrent) {
+      await resizeCanvas(canvasCurrent);
+    }
     const style: StyleRule = GetCanvasStyleRule(outputCtx.bg);
     if (style.color) {
       ctx.globalCompositeOperation = "destination-over";
@@ -84,7 +90,7 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
       posX = posX + imgWidth + MARGIN_BETWEEN_X;
       carryRules = [];
     }
-    setUpCanvas();
+    await setUpCanvas();
   }
 
   async function makeNewRowIfNeeded(imgWidth: number, imgHeight: number) {
@@ -93,8 +99,8 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
       // NOTE: If different image heights will be implemented, use here the height of the
       // latest row instead of imgHeight to update posY and canvasHeight.
       posY = posY + imgHeight + MARGIN_BETWEEN_Y;
-      canvasHeight = canvasHeight + imgHeight + MARGIN_BETWEEN_Y;
-      await resizeCanvas(canvasHeight);
+      canvasCurrent += imgHeight + MARGIN_BETWEEN_Y;
+      if (canvasHeight < canvasCurrent) { await resizeCanvas(canvasCurrent); }
     }
   }
 
@@ -167,7 +173,7 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
   ctx?.reset();
 
   await drawToCanvas();
-  return canvasHeight; // + marginY + 5;
+  return canvasCurrent; // + marginY + 5;
 }
 
 function determineWidth(rules: ConstructingRule[], length: number, defWidth: number): number {

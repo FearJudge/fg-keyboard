@@ -15,7 +15,7 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDispla
     async function runComboEffect(){
       setIsLoading(true);
       const h = await drawCombo(
-        buttonsToMap, gameCtx as ReadableGameCtx, styleCtx as ReadableOutputCtx, 
+        buttonsToMap, gameCtx as ReadableGameCtx, styleCtx as ReadableOutputCtx, canvasRef.current,
         { abort: b.signal }).catch(e => {if (e == undefined) { return; } console.log(e);});
         if (b.signal.aborted) { return; }
       if (h != undefined) { canvasRef.current = h; }
@@ -28,9 +28,9 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDispla
 
  return(
   <div id="outputGrid">
-    <div id="outputDisplay" className={`flex overflow-x-auto mx-auto justify-center items-center relative`}>
-      {isLoading ? <div className={`absolute w-${styleCtx.width} h-${canvasRef.current} bg-cyan-900 text-lg rounded justify-self-center`}>
-        <p>Loading...</p>
+    <div id="outputDisplay" className={`static flex overflow-x-auto mx-auto justify-center items-center`}>
+      {isLoading ? <div className={`absolute w-${styleCtx.width} h-${canvasRef.current} bg-cyan-900 text-lg rounded`}>
+        <p className="top-0 inset-x-0">Loading...</p>
       </div> : null
       }
       <canvas id="comboArea" className="flex bg-cyan-900 rounded mx-auto"
