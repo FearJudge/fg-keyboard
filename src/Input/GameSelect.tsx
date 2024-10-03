@@ -11,7 +11,7 @@ function GameSelector() {
   const [tagExtra, setTagExtra] = useState(baseHidden);
 
   return (
-    <div className="md:col-start-2 mb-4">
+    <div className="md:w-56 mb-4">
       <label className="block text-gray-200
       text-sm font-bold mb-1" htmlFor="game">
       {GameSelectorBaseText}
@@ -23,7 +23,7 @@ function GameSelector() {
       </button>
       <div> { GameListing.map(function(object){
         return <button key={object.displayName} onClick={() => {rctx.setter(object); setTagExtra(baseHidden);  }} className={"appearance-none bg-zinc-800 " +
-        "border-b-4 border-r-2 border-zinc-900 rounded w-48 md:w-11/12 py-3 px-3 text-gray-100 " +
+        "border-b-4 border-r-2 border-zinc-900 rounded w-56 md:w-11/12 py-3 px-3 text-gray-100 " +
         "leading-tight focus:outline-none focus:shadow-outline " + tagExtra}> { object.displayName }
         </button>;
     })}

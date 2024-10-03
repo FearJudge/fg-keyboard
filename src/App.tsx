@@ -54,7 +54,7 @@ function App() {
         </div>
         <h2 className='font-sans'>Fighting Game Combos</h2>
       </div>
-      <div className="md:grid md:grid-cols-4 mb-1">
+      <div className=" md:flex md:justify-center mb-1">
         <GameSelector />
         <CharSelector />
       </div>
