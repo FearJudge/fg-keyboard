@@ -14,7 +14,6 @@ export function Input({setButtons}: InputProps) {
   const [comboInput, setComboInput] = useState('');
   const previousOutput = useRef([0]);
   const previousExtra = useRef([""]);
-  const InputFieldBaseText: string = "COMBO:";
   const InputFieldPlaceholder: string = "Type Combo Here!";
   const rctx = useContext(GameContext);
 
@@ -54,17 +53,13 @@ export function Input({setButtons}: InputProps) {
   return (
     <>
       <div className="self-center py-2" >
-        <label className="block text-gray-200
-          text-lg font-bold font-sans mb-1" htmlFor="combo">
-          {InputFieldBaseText}
-        </label>
         <textarea className="shadow appearance-none
           bg-transparent text-wrap text-xl
           text-center font-medium row-span-full
-          font-sans h-auto w-7/12
+          font-sans h-auto w-full md:w-7/12
           border border-gray-300 border-b-4 border-r-4 rounded-xl py-2 px-3
           focus:text-blue-200 text-gray-100
-          placeholder:text-gray-600
+          placeholder:text-gray-500
           leading-tight
           focus:outline-none focus:shadow-2xl
           focus:shadow-gray-600
