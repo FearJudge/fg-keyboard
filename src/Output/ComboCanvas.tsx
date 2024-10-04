@@ -28,15 +28,17 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDispla
 
  return(
   <div id="outputGrid" className="flex overflow-x-auto">
-    <div id="outputDisplay" className={`static flex mx-auto justify-center items-center`}>
-      {isLoading ? <div className={`absolute w-${styleCtx.width} h-${canvasRef.current} bg-cyan-900 text-lg rounded`}>
-        <p className="top-0 inset-x-0">Loading...</p>
+    <div id="outputDisplay" className="relative flex mx-auto justify-center items-center">
+      {isLoading ? <div id="loadDivContainer" className="absolute inset-0 overflow-hidden rounded">
+        <div id="loadDiv" style={ {width: styleCtx.width, height: canvasRef.current} } className={styleCtx.bg === "white" ? "bg-neutral-500" : "bg-cyan-900" + "bg-opacity-90 text-lg rounded"}>
+          <p className="top-0 inset-x-0">Loading...</p>
+        </div>
       </div> : null
       }
       <canvas id="comboArea" className="flex bg-cyan-900 rounded mx-auto"
         width={styleCtx.width} height={42}>
       </canvas>
-      </div>
+    </div>
   </div>
   )
 }
