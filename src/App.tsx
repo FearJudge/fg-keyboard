@@ -6,7 +6,7 @@ import ComboInput from './Input/ComboInput';
 import { ComboDisplayProps } from './Input/ComboDisplayProps';
 import BaseComboProps from './Input/DefaultComboValues';
 import ComboOutput from './Output/Output';
-import comboukenLogo from './assets/combouken_ph_logo.png'
+import comboukenLogo from './assets/combouken_final_v1.svg';
 import { GameFormat } from './GameProfiles/Games';
 import StreetFighter2 from './GameProfiles/Games/StreetFighter2';
 import { GameContext } from './store/GameContext';
@@ -49,8 +49,8 @@ function App() {
   return (
     <GameContext.Provider value={{game: chosenGame, char: chosenCharacter, setter: changeGameOrCharacter}}>
       <div className="mb-7">
-        <div className="flex justify-center items-center">
-          <img src={comboukenLogo} className="w-52"/>
+        <div className="flex justify-center items-center mb-3 mr-4">
+          <img src={comboukenLogo} className="w-56"/>
         </div>
         <h2 className='font-sans'>Fighting Game Combos</h2>
       </div>
