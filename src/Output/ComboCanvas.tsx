@@ -19,7 +19,7 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDispla
         { abort: b.signal }).catch(e => {if (e == undefined) { return; } console.log(e);});
         if (b.signal.aborted) { return; }
       if (h != undefined) { canvasRef.current = h; }
-      setTimeout(() => { setIsLoading(false); }, 50);
+      setIsLoading(false);
     };
     const b: AbortController = new AbortController();
     runComboEffect();
@@ -30,7 +30,8 @@ export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDispla
   <div id="outputGrid" className="flex overflow-x-auto">
     <div id="outputDisplay" className="relative flex mx-auto justify-center items-center">
       {isLoading ? <div id="loadDivContainer" className="absolute inset-0 overflow-hidden rounded">
-        <div id="loadDiv" style={ {width: styleCtx.width, height: canvasRef.current} } className={styleCtx.bg === "white" ? "bg-neutral-500" : "bg-cyan-900" + "bg-opacity-90 text-lg rounded"}>
+        <div id="loadDiv" style={ {width: styleCtx.width, height: canvasRef.current} } 
+          className={styleCtx.bg === "white" ? "bg-neutral-500" : "bg-cyan-900" + " animate-make-appear  text-lg rounded"}>
           <p className="top-0 inset-x-0">Loading...</p>
         </div>
       </div> : null
