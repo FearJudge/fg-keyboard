@@ -3,16 +3,32 @@ import { AddRuleForStyling, StyleRule } from "../GameProfiles/OutputStyling";
 import { ComboDisplayProps } from "../Input/ComboDisplayProps";
 import { ReadableGameCtx } from "../store/GameContext";
 import { ReadableOutputCtx } from "../store/OutputStyleContext";
-import { DrawImageByRule, FinalizeLayoutAndDraw, GetCanvasModifiers, GetCanvasStyleRule, GetTrueWidth, TintSVGByValue } from "./OutputMapper";
+import { DrawImageByRule, FinalizeLayoutAndDraw, GetCanvasModifiers, GetCanvasStyleRule, 
+         GetTrueWidth, TintSVGByValue } from "./OutputMapper";
 
-export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, outputCtx: ReadableOutputCtx, h: number, ref: {abort: AbortSignal}) {
+/**
+  * Edits the ComboCanvas element with the list of button-ids from Input.
+  * Uses the Game Context and Output Context to determine the outlook.
+  *
+  * @param buttonsToMap - ids of the buttons to be displayed
+  * @param gameCtx - The React Context containing the game and character
+  * @param outputCtx - The React Context of output choices
+  * @param h - original height for the canvas element
+  * @param ref - an object containing a reference to an Abort Signal
+  *   Used to interrupt drawing when the signal expires
+  *
+  * @returns The height of the output canvas 
+  *
+  */
+export async function drawCombo(
+  buttonsToMap: ComboDisplayProps, gameCtx: ReadableGameCtx, 
+  outputCtx: ReadableOutputCtx, h: number, ref: {abort: AbortSignal}) {
   const MARGIN_X = 5;
   const MARGIN_Y = 5;
   const MARGIN_BETWEEN_X = 0;
   const MARGIN_BETWEEN_Y = 0;
 
   const canvasWidth = outputCtx.width;
-
   const canvasHeight = h;
   let canvasCurrent = 42;
   let marginX = MARGIN_X;
@@ -32,7 +48,8 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
       if (rule.print) {
         drawTextOnImage(rule, -1, 0, posY)
       }
-      if (rule.canvasMarginAdd) { marginX += rule.canvasMarginAdd[0]; marginY += rule.canvasMarginAdd[1];
+      if (rule.canvasMarginAdd) { 
+        marginX += rule.canvasMarginAdd[0]; marginY += rule.canvasMarginAdd[1];
         posY = marginY;
         canvasCurrent = 32 + marginY + MARGIN_Y;
         await resizeCanvas(canvasHeight);
@@ -62,7 +79,8 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
     let carryRules: ConstructingRule[] = [];
     for (let i = 0; i < buttonsToMap.ButtonsToDisplay.length; i++) {
       if (ctx == null || ref.abort.aborted) { return; }
-      const rules: ConstructingRule[] = DrawImageByRule(buttonsToMap.ButtonsToDisplay[i], gameCtx.game);
+      const rules: ConstructingRule[] = DrawImageByRule(
+        buttonsToMap.ButtonsToDisplay[i], gameCtx.game);
       if (rules[0].src == NOIMAGESTRING) { carryRules = carryRules.concat(rules); continue; }
 
       const imgWidth: number = (buttonsToMap.ExtraButtonDataToDisplay[i] == "")? 32 :
@@ -80,10 +98,13 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
           buttonsToMap.ExtraButtonDataToDisplay[i] : undefined;
         if (rule.src !== NOIMAGESTRING ) {
           const image = new Image(imgWidth, imgHeight);
-          await drawImageOnThePosition(image, rule, j, currentPosX, currentPosY, imgWidth, imgHeight, (userText !== "")? userText : undefined);
+          await drawImageOnThePosition(
+            image, rule, j, currentPosX, currentPosY, imgWidth, imgHeight, 
+            (userText !== "")? userText : undefined);
         }
         if (rule.print != undefined) {
-          await drawTextOnImage(rule, j, currentPosX, currentPosY, (userText !== "")? userText : undefined);
+          await drawTextOnImage(rule, j, currentPosX, currentPosY, 
+            (userText !== "")? userText : undefined);
         }
       }
 
@@ -119,8 +140,9 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
       img.src = oldCanvas;
     });
   }
- 
-  async function drawTextOnImage(rule: ConstructingRule | AddRuleForStyling, index: number, curX: number, curY: number, text?: string) {
+
+  async function drawTextOnImage(rule: ConstructingRule | AddRuleForStyling, 
+    index: number, curX: number, curY: number, text?: string) {
     await new Promise<number>((resolve, reject) => {
       if (ctx == null) { resolve(index); return; }
       if (ref.abort.aborted) { reject(); return; }
@@ -136,14 +158,15 @@ export async function drawCombo(buttonsToMap: ComboDisplayProps, gameCtx: Readab
     });
   }
 
-  async function drawImageOnThePosition(image: HTMLImageElement, rule: ConstructingRule, index: number, curX: number, curY: number, width: number, height: number, text?: string) {
+  async function drawImageOnThePosition(image: HTMLImageElement, rule: ConstructingRule, 
+    index: number, curX: number, curY: number, width: number, height: number, text?: string) {
     await new Promise<number>((resolve, reject) => {
       image.onload = () => {
         if (ctx !== null) {
           if (ref.abort.aborted) { reject(); return; }
-          if (rule.overrideWidth && 
-            typeof(rule.overrideWidth) !== "number" && 
-            (rule.overrideWidth as {perCharacter: number})["perCharacter"] > 0 
+          if (rule.overrideWidth &&
+            typeof(rule.overrideWidth) !== "number" &&
+            (rule.overrideWidth as {perCharacter: number})["perCharacter"] > 0
             && text && text?.length == 0)
           { resolve(index); return; }
           if (rule.additionaCommand == "END") {
