@@ -8,14 +8,14 @@ export function AddDataInput() {
   
   function changeOption(e: React.ChangeEvent<HTMLInputElement>) {
     const option = e.target.value;
-    let fields = styleCtx.additionalFields;
+    let fields = [...styleCtx.additionalFields];
     if (styleOn(option)) { 
       fields = fields.filter(p => p != option);
      } else {
       fields.push(option);
     }
+    fields.sort();
     styleCtx.addSetter(fields);
-    console.log(fields);
   }
 
   function styleOn(type: string): boolean {

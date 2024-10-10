@@ -36,7 +36,7 @@ function App() {
 
   function changeGameOrCharacter(Game?: GameFormat, Character?: string)
   {
-    if (Game) { setChosenGame(Game); }
+    if (Game) { setChosenGame(Game); setChosenCharacter(Game.characters ? Game.characters[0] : ""); }
     if (Character) { setChosenCharacter(Character); }
   }
 

@@ -36,7 +36,6 @@ export async function drawCombo(
   let posX = MARGIN_X;
   let posY = MARGIN_Y;
 
-  console.log(h);
 
   async function initializeCanvas()
   {
@@ -52,7 +51,7 @@ export async function drawCombo(
         marginX += rule.canvasMarginAdd[0]; marginY += rule.canvasMarginAdd[1];
         posY = marginY;
         canvasCurrent = 32 + marginY + MARGIN_Y;
-        await resizeCanvas(canvasHeight);
+        if (canvasHeight < canvasCurrent) { await resizeCanvas(canvasCurrent); }
       };
     }
     ctx.restore();
@@ -61,14 +60,12 @@ export async function drawCombo(
   async function setUpCanvas()
   {
     if (ctx == null) { return; }
-    if (canvasHeight > canvasCurrent) {
-      await resizeCanvas(canvasCurrent);
-    }
+    await resizeCanvas(canvasCurrent);
     const style: StyleRule = GetCanvasStyleRule(outputCtx.bg);
     if (style.color) {
       ctx.globalCompositeOperation = "destination-over";
       ctx.fillStyle = style.color;
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctx.fillRect(0, 0, canvasWidth, canvasCurrent);
       ctx.restore();
     }
     ctx.restore();
@@ -119,7 +116,7 @@ export async function drawCombo(
       posX = marginX;
       // NOTE: If different image heights will be implemented, use here the height of the
       // latest row instead of imgHeight to update posY and canvasHeight.
-      posY = posY + imgHeight + MARGIN_BETWEEN_Y;
+      posY += imgHeight + MARGIN_BETWEEN_Y;
       canvasCurrent += imgHeight + MARGIN_BETWEEN_Y;
       if (canvasHeight < canvasCurrent) { await resizeCanvas(canvasCurrent); }
     }
@@ -130,11 +127,14 @@ export async function drawCombo(
     const oldCanvas = c.toDataURL();
     const img = new Image();
 
-    const result = await new Promise<number>((resolve, reject) => {
+    await new Promise<number>((resolve, reject) => {
       img.onload = () => {
         if (ref.abort.aborted) { reject(); return; }
         c.height = height;
         ctx.drawImage(img, 0, 0);
+        if (loadDiv != null) {
+          loadDiv.style.height = height.toString()+"px";
+        }
         resolve(height);
       };
       img.src = oldCanvas;
@@ -188,6 +188,7 @@ export async function drawCombo(
     });
   }
 
+  const loadDiv: HTMLDivElement | null = document.getElementById("loadDiv") as HTMLDivElement;
   const c: HTMLCanvasElement | null = document.getElementById("comboArea") as HTMLCanvasElement;
   if (c !== null) {
     c.height = canvasHeight;
