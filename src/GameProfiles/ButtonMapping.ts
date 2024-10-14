@@ -89,8 +89,8 @@ export const GenericMotions: {[key: string]: [RegExp, number, string?]} = {
   quarterCircleBackward: [/[qQ][cC][bB]/, 31, "QCB"],
   halfCircleForward: [/[hH][cC][fF]/, 32, "HCF"],
   halfCircleBackward: [/[hH][cC][bB]/, 33, "HCB"],
-  dragonPunchBackward: [/[Rr](ev(erse)?)?[dD](ragon)?[pP](unch)?/, 35, "DP"],
-  dragonPunchForward: [/[dD](ragon)?[pP](unch)?/, 34, "Rev-DP"],
+  dragonPunchBackward: [/[Rr](ev(erse)?)?[dD](ragon)?[pP](unch)?/, 35, "Rev-DP"],
+  dragonPunchForward: [/[dD](ragon)?[pP](unch)?/, 34, "DP"],
 }
 
 // Regular expressions for typical modifiers for fighting game "stances".

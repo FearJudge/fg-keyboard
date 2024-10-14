@@ -1,50 +1,35 @@
-# React + TypeScript + Vite
+# CombouKen
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple React page with a input field to convert/create combo text inputs to an image containing the required inputs into a more pleasing and "in-game" look.
 
-Currently, two official plugins are available:
+After cloning the repository, In terminal:
+-> "npm install" to install required packages.
+-> "npm run dev" to run a development version.
+-> "npm build" and "npm run preview" to run a preview of the website without debugging.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Use Instructions
+- Choose a game and optionally a character.
+- Add or paste input to the input field using a typical notation style for the corresponding game.
+- You can use parantheses "(", ")", "[", "]" to print out user text.
+- Opening the Output Settings sidebar lets you change various aspects of the resulting image.
+  - You can change the width of the image, the background or add labels of the game/character.
+- Press the save button to save a locally stored picture of your output.
 
-## Expanding the ESLint configuration
+Example Inputs seperated with / - Printed Icon
+Street Fighter 2:
+d / D / down - Arrow Down
+df / DF / down-forward - Arrow Down Forward
+st.lp / stLP / StandingLightPunch - Light Blue Punch Button with the Standing (St) Prefix.
+c.mp / CR.MP / CrouchingMediumPunch - Yellow Punch Button with the Crouching (Cr) Prefix.
+hk / HK / HeavyKick - Red Kick Button
+qcf / QCF - Joystick Icon Motion for Quarter Circle Forward
+qcb / QCB - Joystick Icon Motion for Quarter Circle Backward
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Persona 4 Arena U:
+2 - Arrow Down
+3 - Arrow Down Forward
+A / a - A Button
+JB / j.b - B Button with the Jumping (J.) Prefix
+D / d - D Button
+OMB / OneMoreBurst / one-more-burst - 1More Burst icon
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
