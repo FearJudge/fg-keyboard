@@ -49,6 +49,10 @@ class InputParser
         extraArray.push("");
       }
     }
+    console.log({ 
+      buttons: commandArray,
+      extra: extraArray
+    });
     return { 
       buttons: commandArray,
       extra: extraArray

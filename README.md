@@ -16,20 +16,20 @@ After cloning the repository, In terminal:
 - Press the save button to save a locally stored picture of your output.
 
 Example Inputs seperated with / - Printed Icon
-Street Fighter 2:
-d / D / down - Arrow Down
-df / DF / down-forward - Arrow Down Forward
-st.lp / stLP / StandingLightPunch - Light Blue Punch Button with the Standing (St) Prefix.
-c.mp / CR.MP / CrouchingMediumPunch - Yellow Punch Button with the Crouching (Cr) Prefix.
-hk / HK / HeavyKick - Red Kick Button
-qcf / QCF - Joystick Icon Motion for Quarter Circle Forward
-qcb / QCB - Joystick Icon Motion for Quarter Circle Backward
+Street Fighter 2:  
+d / D / down - Arrow Down  
+df / DF / down-forward - Arrow Down Forward  
+st.lp / stLP / StandingLightPunch - Light Blue Punch Button with the Standing (St) Prefix.  
+c.mp / CR.MP / CrouchingMediumPunch - Yellow Punch Button with the Crouching (Cr) Prefix.  
+hk / HK / HeavyKick - Red Kick Button  
+qcf / QCF - Joystick Icon Motion for Quarter Circle Forward  
+qcb / QCB - Joystick Icon Motion for Quarter Circle Backward  
 
-Persona 4 Arena U:
-2 - Arrow Down
-3 - Arrow Down Forward
-A / a - A Button
-JB / j.b - B Button with the Jumping (J.) Prefix
-D / d - D Button
-OMB / OneMoreBurst / one-more-burst - 1More Burst icon
+Persona 4 Arena U:  
+2 - Arrow Down  
+3 - Arrow Down Forward  
+A / a - A Button  
+JB / j.b - B Button with the Jumping (J.) Prefix  
+D / d - D Button  
+OMB / OneMoreBurst / one-more-burst - 1More Burst icon  
 
