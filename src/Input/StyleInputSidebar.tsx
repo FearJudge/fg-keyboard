@@ -1,6 +1,7 @@
 import { AddDataInput } from './AddDataInput';
 import { ThemeStyleInput } from "./ThemeStyleInput";
 import { WidthInput } from "./WidthInput";
+import { ImageTypeInput } from "./ImageTypeInput";
 import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle, TransitionChild } from '@headlessui/react'
 
@@ -49,6 +50,7 @@ export function StyleInput() {
                     <WidthInput/>
                     <ThemeStyleInput/>
                     <AddDataInput/>
+                    <ImageTypeInput/>
                   </div>
                 </div>
               </DialogPanel>

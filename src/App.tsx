@@ -23,6 +23,7 @@ function App() {
   // defaultChecked in WidthInput.tsx
   const [outputWidth, setOutputWidth] = useState(266);
   const [outputTheme, setOutputTheme] = useState("default");
+  const [outputImageType, setOutputImageType] = useState("image/png")
   const [outputFields, setFields] = useState<string[]>([]);
 
   const [chosenGame, setChosenGame] = useState(StreetFighter2);
@@ -40,10 +41,11 @@ function App() {
     if (Character) { setChosenCharacter(Character); }
   }
 
-  function changeStyle(width?: number, bg?: string)
+  function changeStyle(width?: number, bg?: string, imgType?: string)
   {
     if (width) { setOutputWidth(width); }
     if (bg) { setOutputTheme(bg); }
+    if (imgType) { setOutputImageType(imgType); }
   }
 
   return (
@@ -59,7 +61,7 @@ function App() {
         <CharSelector />
       </div>
       <OutputStyleContext.Provider value={{
-        width: outputWidth, bg: outputTheme, additionalFields: outputFields, 
+        width: outputWidth, bg: outputTheme, additionalFields: outputFields, imgType: outputImageType,
         setter: changeStyle, addSetter: setFields}}>
         <StyleInput/>
         <ComboInput setButtons={setButtons}/>
