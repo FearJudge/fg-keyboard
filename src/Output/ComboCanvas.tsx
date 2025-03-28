@@ -4,7 +4,13 @@ import { ComboDisplayProps } from '../Input/ComboDisplayProps';
 import { drawCombo } from './drawCombo';
 import { GameContext, ReadableGameCtx } from '../store/GameContext';
 import { OutputStyleContext, ReadableOutputCtx } from '../store/OutputStyleContext';
-
+/**
+  * The React component responsible for drawing in the output image on the page.
+  * Uses the Canvas HTML Component
+  *
+  * @param buttonsToMap - A set of props containing information
+  * on the combo that might be relevant for drawing.
+  **/
 export default function ComboCanvas({ buttonsToMap }: {buttonsToMap: ComboDisplayProps}) {
   const gameCtx = useContext(GameContext);
   const styleCtx = useContext(OutputStyleContext);
